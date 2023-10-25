@@ -11,4 +11,6 @@ public interface Web3Constant {
     int METHOD_ID_LENGTH = 10;
 
     int BYTE_LENGTH = 32;
+
+    double FEE_HISTORY_COMMON_REWARD_PERCENTILE = 50;
 }

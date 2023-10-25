@@ -26,7 +26,7 @@ public class EvmError implements IEvmError {
     private final EvmErrorMsg error;
 
     public EvmError(EvmErrorMsg evmErrorMsg) {
-        List<Type> types = CodecUtil.decodeError(evmErrorMsg.getHexData(), ERROR);
+        List<Type> types = CodecUtil.decodeError(evmErrorMsg.getData(), ERROR);
         String reason = (String) types.get(0).getValue();
         String hexData;
         if (reason.startsWith(ERROR_METHOD_ID)) {
@@ -38,7 +38,7 @@ public class EvmError implements IEvmError {
         error = evmErrorMsg;
         if (hexData.startsWith(ERROR_METHOD_ID)) {
             evmErrorMsg = new EvmErrorMsg(hexData);
-            this.hexData = evmErrorMsg.getHexData();
+            this.hexData = evmErrorMsg.getData();
             this.reason = new EvmError(evmErrorMsg).getReason();
         } else {
             this.hexData = hexData;

@@ -7,12 +7,12 @@ import org.web3j.abi.TypeReference;
 import org.web3j.abi.datatypes.Address;
 import org.web3j.abi.datatypes.Function;
 import org.web3j.protocol.core.methods.response.EthCall;
-import xin.yukino.web3.util.chain.ChainEnum;
+import xin.yukino.web3.util.chain.IChain;
 import xin.yukino.web3.util.TransactionUtil;
 
 public class FreeGasPaymaster {
 
-    public static String verifyingSigner(String paymaster, ChainEnum chain) {
+    public static String verifyingSigner(String paymaster, IChain chain) {
         Function function = new Function("verifyingSigner", Lists.newArrayList(), Lists.newArrayList(TypeReference.create(Address.class)));
         String data = FunctionEncoder.encode(function);
         EthCall call = TransactionUtil.call(null, paymaster, data, chain);

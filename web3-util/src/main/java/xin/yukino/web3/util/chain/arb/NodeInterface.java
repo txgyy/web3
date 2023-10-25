@@ -12,10 +12,11 @@ import org.web3j.crypto.Sign;
 import org.web3j.crypto.TransactionEncoder;
 import org.web3j.protocol.core.methods.response.EthCall;
 import org.web3j.utils.Numeric;
-import xin.yukino.web3.util.chain.ChainEnum;
-import xin.yukino.web3.util.constant.GasConstant;
 import xin.yukino.web3.util.CodecUtil;
 import xin.yukino.web3.util.TransactionUtil;
+import xin.yukino.web3.util.chain.IChain;
+import xin.yukino.web3.util.constant.ChainIdConstant;
+import xin.yukino.web3.util.constant.GasConstant;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -37,7 +38,7 @@ public class NodeInterface {
     // 3091729570
     private static final BigInteger RANDOM_GAS = Numeric.toBigInt(CodecUtil.keccak256("Gas".getBytes()), 0, 4);
 
-    private static final byte[] RAND_V = Numeric.toBytesPadded(BigInteger.valueOf(ChainEnum.ARB_MAIN.getChainId() * 3 + 35), 3);
+    private static final byte[] RAND_V = Numeric.toBytesPadded(BigInteger.valueOf(ChainIdConstant.ARB_MAIN * 3 + 35), 3);
     private static final byte[] RAND_R = CodecUtil.keccak256("R".getBytes());
     private static final byte[] RAND_S = CodecUtil.keccak256("S".getBytes());
     private static final Sign.SignatureData RAND_SIGNATURE = new Sign.SignatureData(RAND_V, RAND_R, RAND_S);
@@ -57,7 +58,7 @@ public class NodeInterface {
      * @return baseFee the l2 base fee
      * @return l1BaseFeeEstimate ArbOS's l1 estimate of the l1 base fee
      */
-    public static List<BigInteger> gasEstimateComponents(String from, String to, boolean contractCreation, byte[] data, ChainEnum chain) {
+    public static List<BigInteger> gasEstimateComponents(String from, String to, boolean contractCreation, byte[] data, IChain chain) {
         List<Type> inputParameters = Lists.newArrayList(
                 new Address(to),
                 new Bool(contractCreation),
@@ -89,7 +90,7 @@ public class NodeInterface {
      * This method also doesn't pad the estimate as gas estimation normally does.
      * If using this value to submit a transaction, we'd recommend first padding it by 10%.
      */
-    public static BigInteger estimateL1GasUsed(String to, String data, ChainEnum chain) {
+    public static BigInteger estimateL1GasUsed(String to, String data, IChain chain) {
         List<Type> inputParameters = Lists.newArrayList(
                 new Address(to),
                 new Bool(false),
@@ -106,7 +107,7 @@ public class NodeInterface {
         return result.get(0).multiply(result.get(1)).divide(result.get(2));
     }
 
-    public static BigInteger estimateL1GasUsedFromLocal(String to, String data, ChainEnum chain) {
+    public static BigInteger estimateL1GasUsedFromLocal(String to, String data, IChain chain) {
         RawTransaction rawTransaction = RawTransaction.createTransaction(0, RANDOM_NONCE, RANDOM_GAS, to, BigInteger.ZERO, data, RANDOM_GAS_TIP_CAP, RANDOM_GAS_FEE_CAP);
         byte[] rlpEncode = TransactionEncoder.encode(rawTransaction, RAND_SIGNATURE);
         byte[] compressed = CodecUtil.brotliFastCompress(rlpEncode);

@@ -8,7 +8,7 @@ import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.protocol.core.methods.response.EthCall;
-import xin.yukino.web3.util.chain.ChainEnum;
+import xin.yukino.web3.util.chain.IChain;
 import xin.yukino.web3.util.TransactionUtil;
 
 import java.util.List;
@@ -55,7 +55,7 @@ import java.util.List;
  */
 public class Mload {
 
-    public static EthCall mload(String contract, String from, ChainEnum chain) {
+    public static EthCall mload(String contract, String from, IChain chain) {
         List<Type> inputParameters = Lists.newArrayList();
         List<TypeReference<?>> outputParameters = Lists.newArrayList(TypeReference.create(Uint256.class), TypeReference.create(Uint256.class), TypeReference.create(Uint256.class), TypeReference.create(Uint256.class), TypeReference.create(Uint256.class), TypeReference.create(Uint256.class), TypeReference.create(Uint256.class), TypeReference.create(Uint256.class));
         Function function = new Function("m", inputParameters, outputParameters);

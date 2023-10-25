@@ -37,7 +37,7 @@ public class EvmPanic implements IEvmError {
     private final EvmErrorMsg error;
 
     public EvmPanic(EvmErrorMsg evmErrorMsg) {
-        List<Type> types = CodecUtil.decodeError(evmErrorMsg.getHexData(), ERROR);
+        List<Type> types = CodecUtil.decodeError(evmErrorMsg.getData(), ERROR);
         this.message = Numeric.encodeQuantity(((Uint256) types.get(0)).getValue());
         error = evmErrorMsg;
     }

@@ -17,7 +17,6 @@ import org.web3j.crypto.Hash;
 import org.web3j.rlp.RlpDecoder;
 import org.web3j.rlp.RlpList;
 import org.web3j.utils.Numeric;
-import org.web3j.utils.Strings;
 import xin.yukino.web3.util.constant.Web3Constant;
 
 import java.util.List;
@@ -114,27 +113,6 @@ public class CodecUtil {
 
     public static boolean hasValidMethodId(String value) {
         return value.length() >= Web3Constant.METHOD_ID_LENGTH;
-    }
-
-    public static void printTypeList(List<Type> types) {
-        printTypeList(types, 0);
-    }
-
-    private static void printTypeList(List<Type> types, int deep) {
-        String prefix = Strings.repeat('\t', deep);
-        for (Type type : types) {
-            String name = type.getTypeAsString();
-            Object value = type.getValue();
-            if (value instanceof byte[]) {
-                System.out.printf("%s%s: %s%n", prefix, name, Numeric.toHexString((byte[]) value));
-            } else if (value instanceof List) {
-                System.out.printf("%s%s: %n", prefix, name);
-                printTypeList((List<Type>) value, deep + 1);
-            } else {
-                System.out.printf("%s%s: %s%n", prefix, name, value);
-
-            }
-        }
     }
 
     @SneakyThrows

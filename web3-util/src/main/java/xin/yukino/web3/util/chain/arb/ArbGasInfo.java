@@ -8,7 +8,7 @@ import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.protocol.core.methods.response.EthCall;
-import xin.yukino.web3.util.chain.ChainEnum;
+import xin.yukino.web3.util.chain.IChain;
 import xin.yukino.web3.util.TransactionUtil;
 
 import java.math.BigInteger;
@@ -27,7 +27,7 @@ public class ArbGasInfo {
      * @return per ArbGas congestion,
      * @return per ArbGas total
      */
-    public static List<BigInteger> getPricesInWei(ChainEnum chain) {
+    public static List<BigInteger> getPricesInWei(IChain chain) {
         List<Type> inputParameters = Lists.newArrayList();
         List<TypeReference<?>> outputParameters = Lists.newArrayList(
                 TypeReference.create(Uint256.class),
@@ -43,15 +43,15 @@ public class ArbGasInfo {
         return result.stream().map(t -> (BigInteger) t.getValue()).collect(Collectors.toList());
     }
 
-    public static BigInteger getL2PriceInWei(ChainEnum chain) {
+    public static BigInteger getL2PriceInWei(IChain chain) {
         return getPricesInWei(chain).get(5);
     }
 
-    public static BigInteger getL1PriceInWei(ChainEnum chain) {
+    public static BigInteger getL1PriceInWei(IChain chain) {
         return getPricesInWei(chain).get(1);
     }
 
-    public static BigInteger getL1BaseFeeEstimate(ChainEnum chain) {
+    public static BigInteger getL1BaseFeeEstimate(IChain chain) {
         List<Type> inputParameters = Lists.newArrayList();
         List<TypeReference<?>> outputParameters = Lists.newArrayList(TypeReference.create(Uint256.class));
         Function function = new Function("getL1BaseFeeEstimate", inputParameters, outputParameters);

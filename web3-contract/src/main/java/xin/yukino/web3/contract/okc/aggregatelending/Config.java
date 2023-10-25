@@ -7,12 +7,12 @@ import org.web3j.abi.datatypes.Bool;
 import org.web3j.abi.datatypes.Function;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
-import xin.yukino.web3.util.chain.ChainEnum;
+import xin.yukino.web3.util.chain.IChain;
 import xin.yukino.web3.util.TransactionUtil;
 
 public class Config {
 
-    public static EthSendTransaction setUsingAsCollateral(String contract, String account, String asset, boolean usingAsCollateral, Credentials sender, ChainEnum chain) {
+    public static EthSendTransaction setUsingAsCollateral(String contract, String account, String asset, boolean usingAsCollateral, Credentials sender, IChain chain) {
         Function function = new Function("setUsingAsCollateral", Lists.newArrayList(new Address(account), new Address(asset), new Bool(usingAsCollateral)), Lists.newArrayList());
         String data = FunctionEncoder.encode(function);
         return TransactionUtil.execute(contract, data, sender, chain);

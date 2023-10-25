@@ -12,7 +12,7 @@ public class UnKnowError implements IEvmError {
     private final EvmErrorMsg error;
 
     public UnKnowError(EvmErrorMsg error) {
-        this.message = error.getReason();
+        this.message = error.getMessage() + (error.getData() == null ? "" : "::" + error.getData());
         this.error = error;
     }
 }

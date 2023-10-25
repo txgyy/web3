@@ -1,15 +1,14 @@
-package xin.yukino.web3.util.chain.arb;
+package xin.yukino.web3.util.web3j.resp;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.web3j.utils.Numeric;
-import xin.yukino.web3.util.chain.CommonTransactionReceipt;
 
 import java.math.BigInteger;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class ArbTransactionReceipt extends CommonTransactionReceipt {
+public class TransactionReceiptArb extends TransactionReceiptCommon {
 
     private String gasUsedForL1;
 

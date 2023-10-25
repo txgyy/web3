@@ -7,14 +7,14 @@ import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.protocol.core.methods.response.EthCall;
-import xin.yukino.web3.util.chain.ChainEnum;
+import xin.yukino.web3.util.chain.IChain;
 import xin.yukino.web3.util.TransactionUtil;
 
 import java.util.List;
 
 public class Number {
 
-    public static EthCall numberMarker(String contract, String from, ChainEnum chain) {
+    public static EthCall numberMarker(String contract, String from, IChain chain) {
         List<Type> inputParameters = Lists.newArrayList();
         List<TypeReference<?>> outputParameters = Lists.newArrayList(TypeReference.create(Uint256.class));
         Function function = new Function("numberMarker", inputParameters, outputParameters);

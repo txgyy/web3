@@ -10,37 +10,37 @@ import xin.yukino.web3.util.constant.Web3Constant;
 @Getter
 public class EvmErrorMsg {
 
-    public static final EvmErrorMsg DEFAULT = new EvmErrorMsg(Integer.MIN_VALUE, "", "", Web3Constant.HEX_PREFIX);
+    public static final EvmErrorMsg DEFAULT = new EvmErrorMsg(Integer.MIN_VALUE, "", Web3Constant.HEX_PREFIX);
 
     private final int code;
 
-    private final String reason;
+    private final String message;
 
-    private final String hexData;
+    private final String data;
 
-    public EvmErrorMsg(int code, String message, String data, String hexData) {
+    public EvmErrorMsg(int code, String message, String data) {
         this.code = code;
-        this.reason = message + "::" + data;
-        if (CodecUtil.isValidHex(hexData)) {
-            this.hexData = hexData;
+        this.message = message;
+        if (CodecUtil.isValidHex(data)) {
+            this.data = data;
         } else {
-            this.hexData = Web3Constant.HEX_PREFIX;
+            this.data = Web3Constant.HEX_PREFIX;
         }
     }
 
-    public EvmErrorMsg(String hexData) {
+    public EvmErrorMsg(String data) {
         this.code = 0;
-        this.reason = "";
-        this.hexData = hexData;
+        this.message = "";
+        this.data = data;
     }
 
     public String getMethodId() {
-        if (CodecUtil.isEmpty(hexData)) {
+        if (CodecUtil.isEmpty(data)) {
             return Web3Constant.HEX_PREFIX;
         }
 
-        if (CodecUtil.hasValidMethodId(hexData)) {
-            return hexData.substring(0, Web3Constant.METHOD_ID_LENGTH);
+        if (CodecUtil.hasValidMethodId(data)) {
+            return data.substring(0, Web3Constant.METHOD_ID_LENGTH);
         } else {
             return Web3Constant.HEX_PREFIX;
         }

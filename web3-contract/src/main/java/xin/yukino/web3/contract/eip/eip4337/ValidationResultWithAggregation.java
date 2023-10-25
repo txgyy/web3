@@ -37,7 +37,7 @@ public class ValidationResultWithAggregation implements IEvmError {
 
 
     public ValidationResultWithAggregation(EvmErrorMsg evmErrorMsg) {
-        List<Type> types = CodecUtil.decodeError(evmErrorMsg.getHexData(), ERROR);
+        List<Type> types = CodecUtil.decodeError(evmErrorMsg.getData(), ERROR);
         this.returnInfo = (ReturnInfo) types.get(0);
         this.senderInfo = (StakeInfo) types.get(1);
         this.factoryInfo = (StakeInfo) types.get(2);

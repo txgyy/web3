@@ -8,14 +8,14 @@ import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
-import xin.yukino.web3.util.chain.ChainEnum;
+import xin.yukino.web3.util.chain.IChain;
 import xin.yukino.web3.util.TransactionUtil;
 
 import java.util.List;
 
 public class SystemContract {
 
-    public static EthSendTransaction invoke(String hex, String contractAddress, Credentials credentials, ChainEnum chain) {
+    public static EthSendTransaction invoke(String hex, String contractAddress, Credentials credentials, IChain chain) {
         List<Type> inputParameters = Lists.newArrayList(new Utf8String(hex));
         List<TypeReference<?>> outputParameters = Lists.newArrayList();
         Function function = new Function("invoke", inputParameters, outputParameters);

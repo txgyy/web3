@@ -35,7 +35,7 @@ public class ExecutionResult implements IEvmError {
 
 
     public ExecutionResult(EvmErrorMsg evmErrorMsg) {
-        List<Type> types = CodecUtil.decodeError(evmErrorMsg.getHexData(), ERROR);
+        List<Type> types = CodecUtil.decodeError(evmErrorMsg.getData(), ERROR);
         this.preOpGas = (Uint256) types.get(0);
         this.paid = (Uint256) types.get(1);
         this.deadline = (Uint256) types.get(2);

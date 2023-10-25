@@ -10,8 +10,8 @@ import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.core.methods.request.Transaction;
 import org.web3j.protocol.core.methods.response.EthCall;
-import xin.yukino.web3.util.chain.ChainEnum;
-import xin.yukino.web3.util.Web3ErrorUtil;
+import xin.yukino.web3.util.chain.IChain;
+import xin.yukino.web3.util.ChainErrorUtil;
 import xin.yukino.web3.util.TransactionUtil;
 
 import java.math.BigInteger;
@@ -19,7 +19,7 @@ import java.util.List;
 
 public class SStore {
 
-    public static BigInteger estimateSet(String contract, BigInteger gasLimit, Credentials sender, ChainEnum chain) {
+    public static BigInteger estimateSet(String contract, BigInteger gasLimit, Credentials sender, IChain chain) {
         List<Type> inputParameters = Lists.newArrayList(new Uint256(gasLimit));
         List<TypeReference<?>> outputParameters = Lists.newArrayList(TypeReference.create(Uint256.class));
         Function function = new Function("estimateSet", inputParameters, outputParameters);
@@ -28,7 +28,7 @@ public class SStore {
         return ((BigInteger) FunctionReturnDecoder.decode(call.getResult(), function.getOutputParameters()).get(0).getValue());
     }
 
-    public static BigInteger estimateSet2(String contract, Credentials sender, ChainEnum chain) {
+    public static BigInteger estimateSet2(String contract, Credentials sender, IChain chain) {
         List<Type> inputParameters = Lists.newArrayList();
         List<TypeReference<?>> outputParameters = Lists.newArrayList(TypeReference.create(Uint256.class));
         Function function = new Function("estimateSet2", inputParameters, outputParameters);
@@ -37,7 +37,7 @@ public class SStore {
         return ((BigInteger) FunctionReturnDecoder.decode(call.getResult(), function.getOutputParameters()).get(0).getValue());
     }
 
-    public static BigInteger estimateSet100(String contract, BigInteger gasLimit, Credentials sender, ChainEnum chain) {
+    public static BigInteger estimateSet100(String contract, BigInteger gasLimit, Credentials sender, IChain chain) {
         List<Type> inputParameters = Lists.newArrayList();
         List<TypeReference<?>> outputParameters = Lists.newArrayList();
         Function function = new Function("set", inputParameters, outputParameters);
@@ -46,17 +46,17 @@ public class SStore {
         return TransactionUtil.estimateGas(transaction, chain);
     }
 
-    public static EthCall callSStore(String contract, BigInteger gasLimit, Credentials sender, ChainEnum chain) {
+    public static EthCall callSStore(String contract, BigInteger gasLimit, Credentials sender, IChain chain) {
         List<Type> inputParameters = Lists.newArrayList();
         List<TypeReference<?>> outputParameters = Lists.newArrayList();
         Function function = new Function("set", inputParameters, outputParameters);
         String data = FunctionEncoder.encode(function);
         EthCall call = TransactionUtil.call(sender.getAddress(), contract, gasLimit, data, chain);
-        Web3ErrorUtil.throwChainError(call);
+        ChainErrorUtil.throwChainError(call);
         return call;
     }
 
-    public static String sStore(String contract, BigInteger gasLimit, Credentials sender, ChainEnum chain) {
+    public static String sStore(String contract, BigInteger gasLimit, Credentials sender, IChain chain) {
         List<Type> inputParameters = Lists.newArrayList();
         List<TypeReference<?>> outputParameters = Lists.newArrayList();
         Function function = new Function("set", inputParameters, outputParameters);

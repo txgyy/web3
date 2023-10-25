@@ -7,7 +7,7 @@ import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
-import xin.yukino.web3.util.chain.ChainEnum;
+import xin.yukino.web3.util.chain.IChain;
 import xin.yukino.web3.util.TransactionUtil;
 
 import java.math.BigDecimal;
@@ -18,7 +18,7 @@ public class MockPriceOracleOKC {
                                                    String asset,
                                                    BigDecimal ratio,
                                                    Credentials sender,
-                                                   ChainEnum chain) {
+                                                   IChain chain) {
         Function function = new Function("setAssetRatio",
                 Lists.newArrayList(new Address(asset), new Uint256(ratio.multiply(BigDecimal.TEN.pow(6)).toBigInteger())),
                 Lists.newArrayList());

@@ -11,7 +11,7 @@ import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.core.methods.response.EthCall;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
-import xin.yukino.web3.util.chain.ChainEnum;
+import xin.yukino.web3.util.chain.IChain;
 import xin.yukino.web3.util.TransactionUtil;
 
 import java.math.BigInteger;
@@ -19,7 +19,7 @@ import java.util.List;
 
 public class XENFT {
 
-    public static EthSendTransaction bulkClaimRank(int count, int term, String contractAddress, BigInteger gasLimit, Credentials credentials, ChainEnum chain) {
+    public static EthSendTransaction bulkClaimRank(int count, int term, String contractAddress, BigInteger gasLimit, Credentials credentials, IChain chain) {
         List<Type> inputParameters = Lists.newArrayList(new Uint256(count), new Uint256(term));
         List<TypeReference<?>> outputParameters = Lists.newArrayList(new TypeReference<Uint256>() {
         });
@@ -28,7 +28,7 @@ public class XENFT {
         return TransactionUtil.execute(contractAddress, FunctionEncoder.encode(function), credentials, chain);
     }
 
-    public static EthSendTransaction bulkClaimMintReward(int tokenId, String contractAddress, Credentials credentials, ChainEnum chain) {
+    public static EthSendTransaction bulkClaimMintReward(int tokenId, String contractAddress, Credentials credentials, IChain chain) {
         List<Type> inputParameters = Lists.newArrayList(new Uint256(tokenId), new Address(credentials.getAddress()));
         List<TypeReference<?>> outputParameters = Lists.newArrayList();
         Function function = new Function("bulkClaimMintReward", inputParameters, outputParameters);
@@ -36,7 +36,7 @@ public class XENFT {
         return TransactionUtil.execute(contractAddress, FunctionEncoder.encode(function), credentials, chain);
     }
 
-    public static EthCall tokenURI(int tokenId, String contractAddress, Credentials credentials, ChainEnum chain) {
+    public static EthCall tokenURI(int tokenId, String contractAddress, Credentials credentials, IChain chain) {
         List<Type> inputParameters = Lists.newArrayList(new Uint256(tokenId));
         List<TypeReference<?>> outputParameters = Lists.newArrayList(new TypeReference<Utf8String>() {
         });

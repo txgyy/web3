@@ -6,7 +6,7 @@ import org.web3j.protocol.core.methods.response.EthBlockNumber;
 import org.web3j.protocol.core.methods.response.EthChainId;
 import org.web3j.protocol.core.methods.response.NetVersion;
 import org.web3j.protocol.core.methods.response.Web3ClientVersion;
-import xin.yukino.web3.util.chain.ChainEnum;
+import xin.yukino.web3.util.chain.IChain;
 
 import java.math.BigInteger;
 
@@ -15,39 +15,39 @@ public class ChainUtil {
     //region getBlockNumber getNonce getGasPrice getNetVersion getChainId
 
     @SneakyThrows
-    public static BigInteger getBlockNumber(ChainEnum chain) {
+    public static BigInteger getBlockNumber(IChain chain) {
         EthBlockNumber ethBlockNumber = chain.getWeb3j().ethBlockNumber().send();
-        Web3ErrorUtil.throwChainError(ethBlockNumber);
+        ChainErrorUtil.throwChainError(ethBlockNumber);
         return ethBlockNumber.getBlockNumber();
     }
 
     @SneakyThrows
-    public static String getNetVersion(ChainEnum chain) {
+    public static String getNetVersion(IChain chain) {
         NetVersion netVersion = chain.getWeb3j().netVersion().send();
-        Web3ErrorUtil.throwChainError(netVersion);
+        ChainErrorUtil.throwChainError(netVersion);
         return netVersion.getNetVersion();
     }
 
     @SneakyThrows
-    public static BigInteger getChainId(ChainEnum chain) {
+    public static BigInteger getChainId(IChain chain) {
         EthChainId ethChainId = chain.getWeb3j().ethChainId().send();
-        Web3ErrorUtil.throwChainError(ethChainId);
+        ChainErrorUtil.throwChainError(ethChainId);
         return ethChainId.getChainId();
     }
 
     @SneakyThrows
-    public static String getWeb3ClientVersion(ChainEnum chain) {
+    public static String getWeb3ClientVersion(IChain chain) {
         Web3ClientVersion web3ClientVersion = chain.getWeb3j().web3ClientVersion().send();
-        Web3ErrorUtil.throwChainError(web3ClientVersion);
+        ChainErrorUtil.throwChainError(web3ClientVersion);
         return web3ClientVersion.getWeb3ClientVersion();
     }
     //endregion
 
 
     @SneakyThrows
-    public static TxPoolContent.TxPoolContentResult getTxPoolContent(ChainEnum chain) {
+    public static TxPoolContent.TxPoolContentResult getTxPoolContent(IChain chain) {
         TxPoolContent txPoolContent = chain.getWeb3j().txPoolContent().send();
-        Web3ErrorUtil.throwChainError(txPoolContent);
+        ChainErrorUtil.throwChainError(txPoolContent);
         return txPoolContent.getResult();
     }
 

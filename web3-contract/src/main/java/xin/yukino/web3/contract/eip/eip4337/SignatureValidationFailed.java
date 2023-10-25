@@ -25,7 +25,7 @@ public class SignatureValidationFailed implements IEvmError {
 
 
     public SignatureValidationFailed(EvmErrorMsg evmErrorMsg) {
-        List<Type> types = CodecUtil.decodeError(evmErrorMsg.getHexData(), ERROR);
+        List<Type> types = CodecUtil.decodeError(evmErrorMsg.getData(), ERROR);
         this.aggregator = (Address) types.get(0);
         error = evmErrorMsg;
     }

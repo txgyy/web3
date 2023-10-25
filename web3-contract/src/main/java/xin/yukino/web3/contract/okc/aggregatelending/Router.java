@@ -8,7 +8,7 @@ import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
-import xin.yukino.web3.util.chain.ChainEnum;
+import xin.yukino.web3.util.chain.IChain;
 import xin.yukino.web3.util.TransactionUtil;
 
 import java.math.BigInteger;
@@ -18,7 +18,7 @@ public class Router {
     public static EthSendTransaction supply(String contract, String account, String asset,
                                             BigInteger amount, Boolean collateralAble,
                                             Credentials sender,
-                                            ChainEnum chain) {
+                                            IChain chain) {
         UserAssetParams assetParams = new UserAssetParams(new Address(asset), new Uint256(amount), new Address(account));
         Function function = new Function("supply",
                 Lists.newArrayList(assetParams, new Bool(collateralAble), new Bool(true)),
@@ -30,7 +30,7 @@ public class Router {
     public static EthSendTransaction borrow(String contract, String asset,
                                             BigInteger amount,
                                             Credentials sender,
-                                            ChainEnum chain) {
+                                            IChain chain) {
         UserAssetParams assetParams = new UserAssetParams(new Address(asset), new Uint256(amount), new Address(sender.getAddress()));
         Function function = new Function("borrow",
                 Lists.newArrayList(assetParams, new Bool(true)),
@@ -42,7 +42,7 @@ public class Router {
     public static EthSendTransaction repay(String contract, String asset,
                                            BigInteger amount,
                                            Credentials sender,
-                                           ChainEnum chain) {
+                                           IChain chain) {
         UserAssetParams assetParams = new UserAssetParams(new Address(asset), new Uint256(amount), new Address(sender.getAddress()));
         Function function = new Function("repay",
                 Lists.newArrayList(assetParams, new Bool(true)),

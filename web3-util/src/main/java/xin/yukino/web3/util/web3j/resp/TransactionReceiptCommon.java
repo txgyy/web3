@@ -1,4 +1,4 @@
-package xin.yukino.web3.util.chain;
+package xin.yukino.web3.util.web3j.resp;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
@@ -12,7 +12,7 @@ import java.math.BigInteger;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
-public class CommonTransactionReceipt extends TransactionReceipt {
+public class TransactionReceiptCommon extends TransactionReceipt {
 
     @JSONField(serialize = false)
     private String rawResponse;

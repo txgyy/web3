@@ -6,7 +6,7 @@ import xin.yukino.web3.util.error.EvmErrorMsg;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class ContractErrorException extends RuntimeException {
+public class ContractException extends RuntimeException {
 
     private final int code;
 
@@ -14,10 +14,10 @@ public class ContractErrorException extends RuntimeException {
 
     private final String data;
 
-    public ContractErrorException(EvmErrorMsg error) {
-        super(error.getReason());
+    public ContractException(EvmErrorMsg error) {
+        super(error.getCode() + "::" + error.getMessage() + (error.getData() == null ? "" : "::" + error.getData()));
         this.code = error.getCode();
-        this.msg = error.getReason();
-        this.data = error.getHexData();
+        this.msg = error.getMessage();
+        this.data = error.getData();
     }
 }

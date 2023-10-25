@@ -32,7 +32,7 @@ public class FailedOp implements IEvmError {
 
 
     public FailedOp(EvmErrorMsg evmErrorMsg) {
-        List<Type> types = CodecUtil.decodeError(evmErrorMsg.getHexData(), ERROR);
+        List<Type> types = CodecUtil.decodeError(evmErrorMsg.getData(), ERROR);
         opIndex = (Uint256) types.get(0);
         paymaster = (Address) types.get(1);
         reason = (Utf8String) types.get(2);
