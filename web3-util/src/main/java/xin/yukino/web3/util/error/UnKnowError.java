@@ -9,9 +9,9 @@ public class UnKnowError implements IEvmError {
 
     private final String message;
 
-    private final EvmErrorMsg error;
+    private final ChainErrorMsg error;
 
-    public UnKnowError(EvmErrorMsg error) {
+    public UnKnowError(ChainErrorMsg error) {
         this.message = error.getMessage() + (error.getData() == null ? "" : "::" + error.getData());
         this.error = error;
     }

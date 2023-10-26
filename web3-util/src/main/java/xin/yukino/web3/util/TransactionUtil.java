@@ -134,7 +134,7 @@ public class TransactionUtil {
     @SneakyThrows
     public static BigInteger estimateGas(Transaction transaction, IChain chain) {
         EthEstimateGas ethEstimateGas = chain.getWeb3j().ethEstimateGas(transaction).send();
-        ChainErrorUtil.throwEvmError(ethEstimateGas);
+        ChainErrorUtil.throwChainError(ethEstimateGas);
         return ethEstimateGas.getAmountUsed();
     }
 

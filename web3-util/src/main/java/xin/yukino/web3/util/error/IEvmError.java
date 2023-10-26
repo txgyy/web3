@@ -6,7 +6,7 @@ import xin.yukino.web3.util.constant.Web3Constant;
 
 public interface IEvmError {
 
-    EvmErrorMsg getError();
+    ChainErrorMsg getError();
 
     default String getMethodId() {
         return getError().getMethodId();
@@ -16,11 +16,11 @@ public interface IEvmError {
         return EventEncoder.encode(ERROR).substring(0, Web3Constant.METHOD_ID_LENGTH);
     }
 
-    static IEvmError parseDefaultError(EvmErrorMsg evmErrorMsg) {
-        if (evmErrorMsg.isMethodId(EvmError.ERROR_METHOD_ID)) {
-            return new EvmError(evmErrorMsg);
+    static IEvmError parseDefaultError(ChainErrorMsg chainErrorMsg) {
+        if (chainErrorMsg.isMethodId(EvmError.ERROR_METHOD_ID)) {
+            return new EvmError(chainErrorMsg);
         } else {
-            return new UnKnowError(evmErrorMsg);
+            return new UnKnowError(chainErrorMsg);
         }
     }
 }

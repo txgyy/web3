@@ -7,7 +7,7 @@ import org.web3j.abi.TypeReference;
 import org.web3j.abi.datatypes.Event;
 import org.web3j.abi.datatypes.Type;
 import xin.yukino.web3.util.CodecUtil;
-import xin.yukino.web3.util.error.EvmErrorMsg;
+import xin.yukino.web3.util.error.ChainErrorMsg;
 import xin.yukino.web3.util.error.IEvmError;
 
 import java.util.List;
@@ -33,17 +33,17 @@ public class ValidationResultWithAggregation implements IEvmError {
 
     private final AggregatorStakeInfo aggregatorInfo;
 
-    private final EvmErrorMsg error;
+    private final ChainErrorMsg error;
 
 
-    public ValidationResultWithAggregation(EvmErrorMsg evmErrorMsg) {
-        List<Type> types = CodecUtil.decodeError(evmErrorMsg.getData(), ERROR);
+    public ValidationResultWithAggregation(ChainErrorMsg chainErrorMsg) {
+        List<Type> types = CodecUtil.decodeError(chainErrorMsg.getData(), ERROR);
         this.returnInfo = (ReturnInfo) types.get(0);
         this.senderInfo = (StakeInfo) types.get(1);
         this.factoryInfo = (StakeInfo) types.get(2);
         this.paymasterInfo = (StakeInfo) types.get(3);
         this.aggregatorInfo = (AggregatorStakeInfo) types.get(4);
-        error = evmErrorMsg;
+        error = chainErrorMsg;
     }
 
 }

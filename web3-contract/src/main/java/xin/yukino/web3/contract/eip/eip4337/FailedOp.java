@@ -10,7 +10,7 @@ import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.abi.datatypes.generated.Uint256;
 import xin.yukino.web3.util.CodecUtil;
-import xin.yukino.web3.util.error.EvmErrorMsg;
+import xin.yukino.web3.util.error.ChainErrorMsg;
 import xin.yukino.web3.util.error.IEvmError;
 
 import java.util.List;
@@ -28,15 +28,15 @@ public class FailedOp implements IEvmError {
 
     private final Utf8String reason;
 
-    private final EvmErrorMsg error;
+    private final ChainErrorMsg error;
 
 
-    public FailedOp(EvmErrorMsg evmErrorMsg) {
-        List<Type> types = CodecUtil.decodeError(evmErrorMsg.getData(), ERROR);
+    public FailedOp(ChainErrorMsg chainErrorMsg) {
+        List<Type> types = CodecUtil.decodeError(chainErrorMsg.getData(), ERROR);
         opIndex = (Uint256) types.get(0);
         paymaster = (Address) types.get(1);
         reason = (Utf8String) types.get(2);
-        error = evmErrorMsg;
+        error = chainErrorMsg;
     }
 
 }

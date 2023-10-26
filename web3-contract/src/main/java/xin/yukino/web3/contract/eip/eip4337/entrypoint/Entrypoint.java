@@ -13,7 +13,7 @@ import xin.yukino.web3.contract.eip.eip4337.*;
 import xin.yukino.web3.util.TransactionUtil;
 import xin.yukino.web3.util.ChainErrorUtil;
 import xin.yukino.web3.util.chain.IChain;
-import xin.yukino.web3.util.error.EvmErrorMsg;
+import xin.yukino.web3.util.error.ChainErrorMsg;
 import xin.yukino.web3.util.error.IEvmError;
 
 import java.math.BigInteger;
@@ -35,15 +35,15 @@ public class Entrypoint {
         Function function = new Function("simulateValidation", Lists.newArrayList(uop), Lists.newArrayList());
         String data = FunctionEncoder.encode(function);
         EthCall call = TransactionUtil.call(entryPointAddress, entryPointAddress, data, chain);
-        EvmErrorMsg evmErrorMsg = ChainErrorUtil.parseEvmError(call);
-        if (evmErrorMsg.isMethodId(ValidationResult.ERROR_METHOD_ID)) {
-            return new ValidationResult(evmErrorMsg);
+        ChainErrorMsg chainErrorMsg = ChainErrorUtil.parseChainError(call);
+        if (chainErrorMsg.isMethodId(ValidationResult.ERROR_METHOD_ID)) {
+            return new ValidationResult(chainErrorMsg);
 
-        } else if (evmErrorMsg.isMethodId(ValidationResultWithAggregation.ERROR_METHOD_ID)) {
-            return new ValidationResultWithAggregation(evmErrorMsg);
+        } else if (chainErrorMsg.isMethodId(ValidationResultWithAggregation.ERROR_METHOD_ID)) {
+            return new ValidationResultWithAggregation(chainErrorMsg);
 
         } else {
-            return parseCommonError(evmErrorMsg);
+            return parseCommonError(chainErrorMsg);
         }
     }
 
@@ -51,11 +51,11 @@ public class Entrypoint {
         Function function = new Function("simulateHandleOp", Lists.newArrayList(uop), Lists.newArrayList());
         String data = FunctionEncoder.encode(function);
         EthCall call = TransactionUtil.call(entryPointAddress, entryPointAddress, data, chain);
-        EvmErrorMsg evmErrorMsg = ChainErrorUtil.parseEvmError(call);
-        if (evmErrorMsg.isMethodId(ExecutionResult.ERROR_METHOD_ID)) {
-            return new ExecutionResult(evmErrorMsg);
+        ChainErrorMsg chainErrorMsg = ChainErrorUtil.parseChainError(call);
+        if (chainErrorMsg.isMethodId(ExecutionResult.ERROR_METHOD_ID)) {
+            return new ExecutionResult(chainErrorMsg);
         } else {
-            return parseCommonError(evmErrorMsg);
+            return parseCommonError(chainErrorMsg);
         }
 
     }
@@ -64,11 +64,11 @@ public class Entrypoint {
         Function function = new Function("getSenderAddress", Lists.newArrayList(initCode), Lists.newArrayList());
         String data = FunctionEncoder.encode(function);
         EthCall call = TransactionUtil.call(entryPointAddress, entryPointAddress, data, chain);
-        EvmErrorMsg evmErrorMsg = ChainErrorUtil.parseEvmError(call);
-        if (evmErrorMsg.isMethodId(SenderAddressResult.ERROR_METHOD_ID)) {
-            return new SenderAddressResult(evmErrorMsg);
+        ChainErrorMsg chainErrorMsg = ChainErrorUtil.parseChainError(call);
+        if (chainErrorMsg.isMethodId(SenderAddressResult.ERROR_METHOD_ID)) {
+            return new SenderAddressResult(chainErrorMsg);
         } else {
-            return IEvmError.parseDefaultError(evmErrorMsg);
+            return IEvmError.parseDefaultError(chainErrorMsg);
         }
     }
 
@@ -93,11 +93,11 @@ public class Entrypoint {
         return new UserOpsPerAggregator(userOps, aggregator, (DynamicBytes) signature.get(0));
     }
 
-    public static IEvmError parseCommonError(EvmErrorMsg evmErrorMsg) {
-        if (evmErrorMsg.isMethodId(FailedOp.ERROR_METHOD_ID)) {
-            return new FailedOp(evmErrorMsg);
+    public static IEvmError parseCommonError(ChainErrorMsg chainErrorMsg) {
+        if (chainErrorMsg.isMethodId(FailedOp.ERROR_METHOD_ID)) {
+            return new FailedOp(chainErrorMsg);
         } else {
-            return IEvmError.parseDefaultError(evmErrorMsg);
+            return IEvmError.parseDefaultError(chainErrorMsg);
         }
     }
 }

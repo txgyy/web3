@@ -23,10 +23,10 @@ public class EvmError implements IEvmError {
 
     private final String reason;
 
-    private final EvmErrorMsg error;
+    private final ChainErrorMsg error;
 
-    public EvmError(EvmErrorMsg evmErrorMsg) {
-        List<Type> types = CodecUtil.decodeError(evmErrorMsg.getData(), ERROR);
+    public EvmError(ChainErrorMsg chainErrorMsg) {
+        List<Type> types = CodecUtil.decodeError(chainErrorMsg.getData(), ERROR);
         String reason = (String) types.get(0).getValue();
         String hexData;
         if (reason.startsWith(ERROR_METHOD_ID)) {
@@ -35,11 +35,11 @@ public class EvmError implements IEvmError {
             hexData = Numeric.toHexString(reason.getBytes());
         }
 
-        error = evmErrorMsg;
+        error = chainErrorMsg;
         if (hexData.startsWith(ERROR_METHOD_ID)) {
-            evmErrorMsg = new EvmErrorMsg(hexData);
-            this.hexData = evmErrorMsg.getData();
-            this.reason = new EvmError(evmErrorMsg).getReason();
+            chainErrorMsg = new ChainErrorMsg(hexData);
+            this.hexData = chainErrorMsg.getData();
+            this.reason = new EvmError(chainErrorMsg).getReason();
         } else {
             this.hexData = hexData;
             this.reason = reason;
@@ -47,7 +47,7 @@ public class EvmError implements IEvmError {
     }
 
     public EvmError(String hexData) {
-        this(new EvmErrorMsg(hexData));
+        this(new ChainErrorMsg(hexData));
     }
 
 }

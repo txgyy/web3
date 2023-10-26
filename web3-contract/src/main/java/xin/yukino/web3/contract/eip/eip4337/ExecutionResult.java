@@ -8,7 +8,7 @@ import org.web3j.abi.datatypes.Event;
 import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.generated.Uint256;
 import xin.yukino.web3.util.CodecUtil;
-import xin.yukino.web3.util.error.EvmErrorMsg;
+import xin.yukino.web3.util.error.ChainErrorMsg;
 import xin.yukino.web3.util.error.IEvmError;
 
 import java.util.List;
@@ -31,15 +31,15 @@ public class ExecutionResult implements IEvmError {
 
     private final Uint256 paymasterDeadline;
 
-    private final EvmErrorMsg error;
+    private final ChainErrorMsg error;
 
 
-    public ExecutionResult(EvmErrorMsg evmErrorMsg) {
-        List<Type> types = CodecUtil.decodeError(evmErrorMsg.getData(), ERROR);
+    public ExecutionResult(ChainErrorMsg chainErrorMsg) {
+        List<Type> types = CodecUtil.decodeError(chainErrorMsg.getData(), ERROR);
         this.preOpGas = (Uint256) types.get(0);
         this.paid = (Uint256) types.get(1);
         this.deadline = (Uint256) types.get(2);
         this.paymasterDeadline = (Uint256) types.get(3);
-        error = evmErrorMsg;
+        error = chainErrorMsg;
     }
 }

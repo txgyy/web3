@@ -8,7 +8,7 @@ import org.web3j.abi.datatypes.Address;
 import org.web3j.abi.datatypes.Event;
 import org.web3j.abi.datatypes.Type;
 import xin.yukino.web3.util.CodecUtil;
-import xin.yukino.web3.util.error.EvmErrorMsg;
+import xin.yukino.web3.util.error.ChainErrorMsg;
 import xin.yukino.web3.util.error.IEvmError;
 
 import java.util.List;
@@ -21,12 +21,12 @@ public class SignatureValidationFailed implements IEvmError {
 
     private final Address aggregator;
 
-    private final EvmErrorMsg error;
+    private final ChainErrorMsg error;
 
 
-    public SignatureValidationFailed(EvmErrorMsg evmErrorMsg) {
-        List<Type> types = CodecUtil.decodeError(evmErrorMsg.getData(), ERROR);
+    public SignatureValidationFailed(ChainErrorMsg chainErrorMsg) {
+        List<Type> types = CodecUtil.decodeError(chainErrorMsg.getData(), ERROR);
         this.aggregator = (Address) types.get(0);
-        error = evmErrorMsg;
+        error = chainErrorMsg;
     }
 }

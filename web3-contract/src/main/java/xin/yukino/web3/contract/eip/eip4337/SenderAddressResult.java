@@ -8,7 +8,7 @@ import org.web3j.abi.datatypes.Address;
 import org.web3j.abi.datatypes.Event;
 import org.web3j.abi.datatypes.Type;
 import xin.yukino.web3.util.CodecUtil;
-import xin.yukino.web3.util.error.EvmErrorMsg;
+import xin.yukino.web3.util.error.ChainErrorMsg;
 import xin.yukino.web3.util.error.IEvmError;
 
 import java.util.List;
@@ -21,12 +21,12 @@ public class SenderAddressResult implements IEvmError {
 
     private final Address address;
 
-    private final EvmErrorMsg error;
+    private final ChainErrorMsg error;
 
 
-    public SenderAddressResult(EvmErrorMsg evmErrorMsg) {
-        List<Type> types = CodecUtil.decodeError(evmErrorMsg.getData(), ERROR);
+    public SenderAddressResult(ChainErrorMsg chainErrorMsg) {
+        List<Type> types = CodecUtil.decodeError(chainErrorMsg.getData(), ERROR);
         this.address = (Address) types.get(0);
-        error = evmErrorMsg;
+        error = chainErrorMsg;
     }
 }

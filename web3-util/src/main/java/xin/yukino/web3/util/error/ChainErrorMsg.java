@@ -8,9 +8,9 @@ import xin.yukino.web3.util.constant.Web3Constant;
  * go-ethereum@v1.10.8-okc1/core/vm/errors.go
  */
 @Getter
-public class EvmErrorMsg {
+public class ChainErrorMsg {
 
-    public static final EvmErrorMsg DEFAULT = new EvmErrorMsg(Integer.MIN_VALUE, "", Web3Constant.HEX_PREFIX);
+    public static final ChainErrorMsg DEFAULT = new ChainErrorMsg(Integer.MIN_VALUE, "", Web3Constant.HEX_PREFIX);
 
     private final int code;
 
@@ -18,7 +18,7 @@ public class EvmErrorMsg {
 
     private final String data;
 
-    public EvmErrorMsg(int code, String message, String data) {
+    public ChainErrorMsg(int code, String message, String data) {
         this.code = code;
         this.message = message;
         if (CodecUtil.isValidHex(data)) {
@@ -28,9 +28,9 @@ public class EvmErrorMsg {
         }
     }
 
-    public EvmErrorMsg(String data) {
+    public ChainErrorMsg(String data) {
         this.code = 0;
-        this.message = "";
+        this.message = data;
         this.data = data;
     }
 

@@ -1,12 +1,9 @@
 package xin.yukino.web3.util.exception;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import org.web3j.protocol.core.Response;
 
-
-@EqualsAndHashCode(callSuper = true)
-@Data
+@Getter
 public class ChainException extends RuntimeException {
 
     private final int code;
