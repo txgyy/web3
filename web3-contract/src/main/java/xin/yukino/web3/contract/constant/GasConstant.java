@@ -1,4 +1,4 @@
-package xin.yukino.web3.util.constant;
+package xin.yukino.web3.contract.constant;
 
 public interface GasConstant {
 

@@ -1,7 +1,7 @@
 package xin.yukino.web3.contract.gas;
 
 import org.web3j.utils.Numeric;
-import xin.yukino.web3.util.constant.GasConstant;
+import xin.yukino.web3.contract.constant.GasConstant;
 
 public class InitialGas {
 

@@ -13,8 +13,8 @@ import org.web3j.abi.datatypes.generated.Uint8;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.core.methods.response.EthCall;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
-import xin.yukino.web3.util.IChain;
 import xin.yukino.web3.util.ChainErrorUtil;
+import xin.yukino.web3.util.IChain;
 import xin.yukino.web3.util.TransactionUtil;
 
 import java.math.BigInteger;
@@ -63,14 +63,14 @@ public class Erc20 {
         List<Type> inputParameters = Lists.newArrayList(new Address(account), new Uint256(amount));
         List<TypeReference<?>> outputParameters = Lists.newArrayList();
         Function function = new Function("mint", inputParameters, outputParameters);
-        return TransactionUtil.execute(contract, FunctionEncoder.encode(function), credentials, chain);
+        return TransactionUtil.execute(chain, credentials, contract, FunctionEncoder.encode(function));
     }
 
     public static EthSendTransaction transferFrom(String contract, String from, String to, BigInteger amount, Credentials credentials, IChain chain) {
         List<Type> inputParameters = Lists.newArrayList(new Address(from), new Address(to), new Uint256(amount));
         List<TypeReference<?>> outputParameters = Lists.newArrayList();
         Function function = new Function("transferFrom", inputParameters, outputParameters);
-        return TransactionUtil.execute(contract, FunctionEncoder.encode(function), credentials, chain);
+        return TransactionUtil.execute(chain, credentials, contract, FunctionEncoder.encode(function));
     }
 
 
@@ -79,14 +79,14 @@ public class Erc20 {
         List<TypeReference<?>> outputParameters = Lists.newArrayList();
         Function function = new Function("transfer", inputParameters, outputParameters);
         String data = FunctionEncoder.encode(function);
-        return TransactionUtil.execute(contract, data, credentials, chain);
+        return TransactionUtil.execute(chain, credentials, contract, data);
     }
 
     public static EthSendTransaction approve(String contract, String to, BigInteger amount, Credentials credentials, IChain chain) {
         List<Type> inputParameters = Lists.newArrayList(new Address(to), new Uint256(amount));
         List<TypeReference<?>> outputParameters = Lists.newArrayList();
         Function function = new Function("approve", inputParameters, outputParameters);
-        return TransactionUtil.execute(contract, FunctionEncoder.encode(function), credentials, chain);
+        return TransactionUtil.execute(chain, credentials, contract, FunctionEncoder.encode(function));
     }
 
 }

@@ -11,6 +11,6 @@ public class EIP1167 {
     public static EthSendTransaction createMinProxy(String contractAddress, Credentials credentials, IChain chain) {
         contractAddress = Numeric.cleanHexPrefix(contractAddress);
         String init = "0x3d602d80600a3d3981f3" + "363d3d373d3d3d363d73" + contractAddress + "5af43d82803e903d91602b57fd5bf3";
-        return TransactionUtil.execute(null, init, credentials, chain);
+        return TransactionUtil.execute(chain, credentials, null, init);
     }
 }

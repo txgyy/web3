@@ -8,6 +8,6 @@ import xin.yukino.web3.util.TransactionUtil;
 public class Create {
 
     public static EthSendTransaction create(String init, Credentials credentials, IChain chain) {
-        return TransactionUtil.execute(null, init, credentials, chain);
+        return TransactionUtil.execute(chain, credentials, null, init);
     }
 }

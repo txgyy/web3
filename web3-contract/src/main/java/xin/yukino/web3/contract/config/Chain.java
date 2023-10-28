@@ -1,7 +1,8 @@
-package xin.yukino.web3.util;
+package xin.yukino.web3.contract.config;
 
 import lombok.Getter;
 import org.web3j.protocol.http.HttpService;
+import xin.yukino.web3.util.IChain;
 import xin.yukino.web3.util.web3j.Web3jDebug;
 
 /**

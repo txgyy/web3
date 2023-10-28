@@ -16,7 +16,7 @@ import xin.yukino.web3.util.CodecUtil;
 import xin.yukino.web3.util.TransactionUtil;
 import xin.yukino.web3.util.IChain;
 import xin.yukino.web3.util.constant.ChainIdConstant;
-import xin.yukino.web3.util.constant.GasConstant;
+import xin.yukino.web3.contract.constant.GasConstant;
 
 import java.math.BigInteger;
 import java.util.List;
