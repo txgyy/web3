@@ -1,8 +1,7 @@
-package xin.yukino.web3.contract.config;
+package xin.yukino.web3.util;
 
 import lombok.Getter;
 import org.web3j.protocol.http.HttpService;
-import xin.yukino.web3.util.chain.IChain;
 import xin.yukino.web3.util.web3j.Web3jDebug;
 
 /**
@@ -42,6 +41,8 @@ public class Chain implements IChain {
     public static Chain ETH_TEST = new Chain(5, true, "https://rpc.ankr.com/eth_goerli");
 
     public static Chain ETH_MAIN = new Chain(1, true, "https://eth.llamarpc.com");
+
+    public static Chain LOCAL = new Chain(1337, true, "http://127.0.0.1:8545");
 
 
     private final long chainId;

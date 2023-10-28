@@ -1,6 +1,5 @@
 package xin.yukino.web3.util;
 
-
 import com.google.common.collect.Iterables;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +13,6 @@ import org.web3j.protocol.core.methods.request.Transaction;
 import org.web3j.protocol.core.methods.response.*;
 import org.web3j.tx.RawTransactionManager;
 import org.web3j.utils.Convert;
-import xin.yukino.web3.util.chain.IChain;
 import xin.yukino.web3.util.constant.Web3Constant;
 import xin.yukino.web3.util.web3j.req.StateOverride;
 
@@ -24,69 +22,60 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+
 public class TransactionUtil {
 
     //region execute
     @SneakyThrows
-    public static EthSendTransaction sendTransaction(BigInteger gasPrice, BigInteger gasLimit, String to, String data, BigInteger value, BigInteger nonce, Credentials credentials, IChain chain) {
-        RawTransactionManager transactionManager = new RawTransactionManager(chain.getWeb3j(), credentials, chain.getChainId());
-        RawTransaction rawTransaction = RawTransaction.createTransaction(nonce, gasPrice, gasLimit, to, value, data);
-        EthSendTransaction ethSendTransaction = transactionManager.signAndSend(rawTransaction);
-        ChainErrorUtil.throwChainError(ethSendTransaction);
-        return ethSendTransaction;
-    }
-
-    @SneakyThrows
-    public static EthSendTransaction sendTransaction(BigInteger maxPriorityFeePerGas, BigInteger maxFeePerGas, BigInteger gasLimit, String to, String data, BigInteger value, BigInteger nonce, Credentials credentials, IChain chain) {
-        RawTransactionManager transactionManager = new RawTransactionManager(chain.getWeb3j(), credentials, chain.getChainId());
-        RawTransaction rawTransaction = RawTransaction.createTransaction(chain.getChainId(), nonce, gasLimit, to, value, data, maxPriorityFeePerGas, maxFeePerGas);
-        EthSendTransaction ethSendTransaction = transactionManager.signAndSend(rawTransaction);
-        ChainErrorUtil.throwChainError(ethSendTransaction);
-        return ethSendTransaction;
-    }
-
-    public static EthSendTransaction execute(String to, BigInteger value, String data, BigInteger gasLimit,
-                                             boolean isAccelerated, Credentials credentials,
-                                             IChain chain, BigInteger... prices) {
-        String from = credentials.getAddress();
-        BigInteger nonce = AccountUtil.getNonce(from, isAccelerated, chain);
-        if (chain.isEip1559()) {
-            if (prices.length < 2) {
-                ChainFee gasPrice1559 = get1559GasPrice(chain, Web3Constant.FEE_HISTORY_COMMON_REWARD_PERCENTILE);
-                BigInteger maxPriorityFeePerGas = gasPrice1559.getMaxPriorityFeePerGas();
-                BigInteger baseFee = gasPrice1559.getBaseFee();
-                BigInteger maxFeePerGas = maxPriorityFeePerGas.add(baseFee);
-                return sendTransaction(maxPriorityFeePerGas, maxFeePerGas, gasLimit, to, data, value, nonce, credentials, chain);
+    public static EthSendTransaction sendTransaction(IChain chain, Credentials from, BigInteger nonce, BigInteger gasLimit, String to, BigInteger value, String data, BigInteger... gasPrice) {
+        EthSendTransaction ethSendTransaction;
+        if (from.getEcKeyPair().getPrivateKey().equals(BigInteger.ZERO)) {
+            Transaction transaction;
+            if (chain.isEip1559()) {
+                transaction = new Transaction(from.getAddress(), nonce, null, gasLimit, to, value, data, chain.getChainId(), gasPrice[1], gasPrice[0]);
             } else {
-                return sendTransaction(prices[1], prices[0], gasLimit, to, data, value, nonce, credentials, chain);
+                transaction = new Transaction(from.getAddress(), nonce, gasPrice[0], gasLimit, to, value, data, chain.getChainId(), null, null);
             }
-
+            ethSendTransaction = chain.getWeb3j().ethSendTransaction(transaction).send();
         } else {
-            if (prices.length < 1) {
-                BigInteger gasPrice = getGasPrice(chain);
-                return sendTransaction(gasPrice, gasLimit, to, data, value, nonce, credentials, chain);
+            RawTransactionManager transactionManager;
+            RawTransaction rawTransaction;
+            if (chain.isEip1559()) {
+                transactionManager = new RawTransactionManager(chain.getWeb3j(), from, chain.getChainId());
+                rawTransaction = RawTransaction.createTransaction(chain.getChainId(), nonce, gasLimit, to, value, data, gasPrice[1], gasPrice[0]);
+
             } else {
-                return sendTransaction(prices[0], gasLimit, to, data, value, nonce, credentials, chain);
-
+                transactionManager = new RawTransactionManager(chain.getWeb3j(), from, chain.getChainId());
+                rawTransaction = RawTransaction.createTransaction(nonce, gasPrice[0], gasLimit, to, value, data);
             }
+            ethSendTransaction = transactionManager.signAndSend(rawTransaction);
         }
+        ChainErrorUtil.throwChainError(ethSendTransaction);
+        return ethSendTransaction;
     }
 
-    public static EthSendTransaction execute(String to,
-                                             BigInteger value, String data, boolean isAccelerated, Credentials credentials,
-                                             IChain chain, BigInteger... prices) {
-        String from = credentials.getAddress();
-        BigInteger gasLimit = estimateGas(from, to, data, chain);
-        return execute(to, value, data, gasLimit.multiply(BigInteger.valueOf(2)), isAccelerated, credentials, chain, prices);
+    public static EthSendTransaction execute(IChain chain, Credentials from, BigInteger gasLimit, String to, BigInteger value, String data,
+                                             boolean isAccelerated, BigInteger... prices) {
+        String fromAddr = from.getAddress();
+        if (gasLimit == null) {
+            gasLimit = estimateGas(fromAddr, to, data, chain).multiply(BigInteger.valueOf(13)).divide(BigInteger.TEN);
+        }
+        BigInteger nonce = AccountUtil.getNonce(fromAddr, isAccelerated, chain);
+        prices = resolveGasPrice(chain, prices);
+        return sendTransaction(chain, from, nonce, gasLimit, to, value, data, prices);
     }
 
-    public static EthSendTransaction execute(String to, String data, Credentials credentials,
-                                             IChain chain) {
-        return execute(to, null, data, false, credentials, chain);
+    public static EthSendTransaction execute(IChain chain, Credentials from, String to, BigInteger value, String data,
+                                             boolean isAccelerated, BigInteger... prices) {
+        return execute(chain, from, null, to, value, data, isAccelerated, prices);
     }
 
-    public static EthSendTransaction transfer(String to, BigDecimal value, Credentials credentials, IChain chain) {
-        return execute(to, Convert.toWei(value, Convert.Unit.ETHER).toBigIntegerExact(), "", false, credentials, chain);
+    public static EthSendTransaction execute(IChain chain, Credentials from, String to, String data) {
+        return execute(chain, from, to, null, data, false);
+    }
+
+    public static EthSendTransaction transfer(IChain chain, Credentials from, String to, BigDecimal value) {
+        return execute(chain, from, to, Convert.toWei(value, Convert.Unit.ETHER).toBigIntegerExact(), "", false);
     }
 
     //endregion
@@ -117,16 +106,16 @@ public class TransactionUtil {
                 EthCall.class).send();
     }
 
-    public static EthCall call(String from, String to, BigInteger gasLimit, String function, IChain chain) {
-        return call(from, null, gasLimit, to, null, function, chain, null, null);
+    public static EthCall call(String from, BigInteger gasLimit, String to, String data, IChain chain) {
+        return call(from, null, gasLimit, to, null, data, chain, null, null);
     }
 
-    public static EthCall call(String from, String to, String function, IChain chain) {
-        return call(from, null, null, to, null, function, chain, null, null);
+    public static EthCall call(String from, String to, String data, IChain chain) {
+        return call(from, null, null, to, null, data, chain, null, null);
     }
 
-    public static EthCall call(String from, String to, String function, IChain chain, StateOverride stateOverride) {
-        return call(from, null, null, to, null, function, chain, null, stateOverride);
+    public static EthCall call(String from, String to, String data, IChain chain, StateOverride stateOverride) {
+        return call(from, null, null, to, null, data, chain, null, stateOverride);
     }
     //endregion
 
@@ -175,6 +164,27 @@ public class TransactionUtil {
         private final BigInteger baseFee;
 
         private final BigInteger maxPriorityFeePerGas;
+    }
+
+    private static BigInteger[] resolveGasPrice(IChain chain, BigInteger... prices) {
+        if (chain.isEip1559()) {
+            if (prices.length < 2) {
+                ChainFee gasPrice1559 = get1559GasPrice(chain, Web3Constant.FEE_HISTORY_COMMON_REWARD_PERCENTILE);
+                BigInteger maxPriorityFeePerGas = gasPrice1559.getMaxPriorityFeePerGas();
+                BigInteger baseFee = gasPrice1559.getBaseFee();
+                BigInteger maxFeePerGas = maxPriorityFeePerGas.add(baseFee.multiply(BigInteger.valueOf(2)));
+                return new BigInteger[]{maxFeePerGas, maxPriorityFeePerGas};
+            } else {
+                return prices;
+            }
+        } else {
+            if (prices.length < 1) {
+                BigInteger gasPrice = getGasPrice(chain);
+                return new BigInteger[]{gasPrice};
+            } else {
+                return new BigInteger[]{prices[0]};
+            }
+        }
     }
 
 }

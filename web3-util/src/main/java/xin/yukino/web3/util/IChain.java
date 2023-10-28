@@ -1,4 +1,4 @@
-package xin.yukino.web3.util.chain;
+package xin.yukino.web3.util;
 
 import xin.yukino.web3.util.web3j.Web3jDebug;
 

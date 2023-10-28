@@ -4,28 +4,30 @@ import com.aayushatharva.brotli4j.Brotli4jLoader;
 import com.aayushatharva.brotli4j.decoder.Decoder;
 import com.aayushatharva.brotli4j.decoder.DirectDecompress;
 import com.aayushatharva.brotli4j.encoder.Encoder;
+import com.esaulpaugh.headlong.abi.Address;
 import com.esaulpaugh.headlong.abi.Function;
 import com.esaulpaugh.headlong.abi.Tuple;
 import lombok.SneakyThrows;
-import org.apache.commons.lang3.StringUtils;
 import org.web3j.abi.FunctionReturnDecoder;
 import org.web3j.abi.TypeEncoder;
 import org.web3j.abi.datatypes.DynamicStruct;
 import org.web3j.abi.datatypes.Event;
 import org.web3j.abi.datatypes.Type;
 import org.web3j.crypto.Hash;
+import org.web3j.crypto.RawTransaction;
+import org.web3j.crypto.Sign;
+import org.web3j.crypto.TransactionEncoder;
+import org.web3j.protocol.core.methods.response.Transaction;
 import org.web3j.rlp.RlpDecoder;
 import org.web3j.rlp.RlpList;
 import org.web3j.utils.Numeric;
 import xin.yukino.web3.util.constant.Web3Constant;
 
+import java.math.BigInteger;
 import java.util.List;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class CodecUtil {
-
-    private static final Pattern PATTERN = Pattern.compile("^0x[0-9a-f]*$");
 
     static {
         Brotli4jLoader.ensureAvailability();
@@ -91,26 +93,6 @@ public class CodecUtil {
         return Hash.sha3(Numeric.hexStringToByteArray(input));
     }
 
-    public static boolean isValidHex(String value) {
-        if (value == null) {
-            return false;
-        }
-
-        if (value.length() < 3) {
-            return false;
-        }
-
-        if (!value.startsWith(Web3Constant.HEX_PREFIX)) {
-            return false;
-        }
-
-        return PATTERN.matcher(value).matches();
-    }
-
-    public static boolean isEmpty(String field) {
-        return StringUtils.equalsIgnoreCase(field, Web3Constant.HEX_PREFIX);
-    }
-
     public static boolean hasValidMethodId(String value) {
         return value.length() >= Web3Constant.METHOD_ID_LENGTH;
     }
@@ -143,6 +125,17 @@ public class CodecUtil {
 
     public static RlpList rlpDecode(String signedData) {
         return RlpDecoder.decode(Numeric.hexStringToByteArray(signedData));
+    }
+
+    public static String getRawTransactionData(String txHash, IChain chain) {
+        Transaction transaction = ReceiptUtil.getTransactionByHash(txHash, chain);
+        RawTransaction rawTransaction = RawTransaction.createContractTransaction(transaction.getNonce(), transaction.getGasPrice(), transaction.getGas(), transaction.getValue(), transaction.getInput());
+        Sign.SignatureData signatureData = new Sign.SignatureData(Numeric.hexStringToByteArray(Numeric.encodeQuantity(BigInteger.valueOf(transaction.getV()))), Numeric.hexStringToByteArray(transaction.getR()), Numeric.hexStringToByteArray(transaction.getS()));
+        return Numeric.toHexString(TransactionEncoder.encode(rawTransaction, signatureData));
+    }
+
+    public static String toChecksumAddress(String address) {
+        return Address.toChecksumAddress(address);
     }
 
 }

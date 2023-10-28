@@ -1,4 +1,4 @@
-package xin.yukino.web3.util.chain.arb;
+package xin.yukino.web3.contract.chain.arb;
 
 import com.google.common.collect.Lists;
 import org.web3j.abi.FunctionEncoder;
@@ -14,7 +14,7 @@ import org.web3j.protocol.core.methods.response.EthCall;
 import org.web3j.utils.Numeric;
 import xin.yukino.web3.util.CodecUtil;
 import xin.yukino.web3.util.TransactionUtil;
-import xin.yukino.web3.util.chain.IChain;
+import xin.yukino.web3.util.IChain;
 import xin.yukino.web3.util.constant.ChainIdConstant;
 import xin.yukino.web3.util.constant.GasConstant;
 

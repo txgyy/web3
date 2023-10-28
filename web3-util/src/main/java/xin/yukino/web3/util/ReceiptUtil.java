@@ -8,7 +8,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.methods.request.EthFilter;
 import org.web3j.protocol.core.methods.response.*;
-import xin.yukino.web3.util.chain.IChain;
 import xin.yukino.web3.util.constant.ChainIdConstant;
 import xin.yukino.web3.util.web3j.resp.TransactionReceiptArb;
 import xin.yukino.web3.util.web3j.resp.TransactionReceiptCommon;

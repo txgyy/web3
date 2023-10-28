@@ -6,7 +6,6 @@ import org.web3j.protocol.core.methods.response.EthBlockNumber;
 import org.web3j.protocol.core.methods.response.EthChainId;
 import org.web3j.protocol.core.methods.response.NetVersion;
 import org.web3j.protocol.core.methods.response.Web3ClientVersion;
-import xin.yukino.web3.util.chain.IChain;
 
 import java.math.BigInteger;
 

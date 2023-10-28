@@ -23,4 +23,12 @@ public interface IEvmError {
             return new UnKnowError(chainErrorMsg);
         }
     }
+
+    static String resolveFinalReason(String reason) {
+        if (reason.startsWith(EvmError.ERROR_METHOD_ID)) {
+            return new EvmError(reason).getReason();
+        } else {
+            return reason;
+        }
+    }
 }

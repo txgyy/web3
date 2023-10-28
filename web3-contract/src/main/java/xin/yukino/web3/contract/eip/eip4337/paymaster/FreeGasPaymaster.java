@@ -7,7 +7,7 @@ import org.web3j.abi.TypeReference;
 import org.web3j.abi.datatypes.Address;
 import org.web3j.abi.datatypes.Function;
 import org.web3j.protocol.core.methods.response.EthCall;
-import xin.yukino.web3.util.chain.IChain;
+import xin.yukino.web3.util.IChain;
 import xin.yukino.web3.util.TransactionUtil;
 
 public class FreeGasPaymaster {

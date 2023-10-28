@@ -8,7 +8,7 @@ import org.web3j.abi.datatypes.*;
 import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.core.methods.response.EthCall;
-import xin.yukino.web3.util.chain.IChain;
+import xin.yukino.web3.util.IChain;
 import xin.yukino.web3.util.TransactionUtil;
 
 import java.util.List;

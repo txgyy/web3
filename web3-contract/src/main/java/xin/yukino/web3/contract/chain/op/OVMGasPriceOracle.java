@@ -1,4 +1,4 @@
-package xin.yukino.web3.util.chain.op;
+package xin.yukino.web3.contract.chain.op;
 
 import com.google.common.collect.Lists;
 import org.web3j.abi.FunctionEncoder;
@@ -10,7 +10,7 @@ import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.crypto.RawTransaction;
 import org.web3j.crypto.TransactionEncoder;
 import org.web3j.protocol.core.methods.response.EthCall;
-import xin.yukino.web3.util.chain.IChain;
+import xin.yukino.web3.util.IChain;
 import xin.yukino.web3.util.TransactionUtil;
 
 import java.math.BigInteger;

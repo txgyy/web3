@@ -12,7 +12,7 @@ import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import xin.yukino.web3.contract.eip.eip4337.*;
 import xin.yukino.web3.util.TransactionUtil;
 import xin.yukino.web3.util.ChainErrorUtil;
-import xin.yukino.web3.util.chain.IChain;
+import xin.yukino.web3.util.IChain;
 import xin.yukino.web3.util.error.ChainErrorMsg;
 import xin.yukino.web3.util.error.IEvmError;
 

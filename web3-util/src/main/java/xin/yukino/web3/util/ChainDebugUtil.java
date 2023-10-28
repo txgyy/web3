@@ -4,7 +4,6 @@ import com.alibaba.fastjson2.JSON;
 import lombok.SneakyThrows;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.request.Transaction;
-import xin.yukino.web3.util.chain.IChain;
 import xin.yukino.web3.util.web3j.req.TraceCallConfig;
 import xin.yukino.web3.util.web3j.req.TraceConfig;
 import xin.yukino.web3.util.web3j.req.TracerConfig;

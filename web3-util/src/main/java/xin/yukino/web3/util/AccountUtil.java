@@ -6,7 +6,6 @@ import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.protocol.core.methods.response.EthGetCode;
 import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
 import org.web3j.utils.Convert;
-import xin.yukino.web3.util.chain.IChain;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

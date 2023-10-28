@@ -9,7 +9,7 @@ import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.protocol.core.methods.response.EthCall;
-import xin.yukino.web3.util.chain.IChain;
+import xin.yukino.web3.util.IChain;
 import xin.yukino.web3.util.TransactionUtil;
 
 import java.math.BigInteger;
