@@ -1,6 +1,5 @@
 package xin.yukino.web3.util;
 
-import org.apache.commons.lang3.StringUtils;
 import xin.yukino.web3.util.constant.Web3Constant;
 
 import java.util.regex.Pattern;
@@ -10,44 +9,50 @@ import java.util.regex.Pattern;
  */
 public class FieldUtil {
 
-    private static final Pattern PATTERN = Pattern.compile("^0x[0-9a-f]*$");
+    private static final Pattern PATTERN = Pattern.compile("^0x[0-9a-fA-F]*$");
 
     private static final Pattern PATTERN_ADDRESS = Pattern.compile("^0x[0-9a-fA-F]{40,40}$");
 
-    public static boolean isValidAddress(Object value) {
-        if (value == null) {
+    private static final Pattern PATTERN_BYTES32 = Pattern.compile("^0x[0-9a-fA-F]{64,64}$");
+
+    public static boolean isValidBytes32(String value) {
+        if (!isValidHexPrefix(value)) {
             return false;
         }
 
-        if (!(value instanceof String)) {
+        return PATTERN_BYTES32.matcher(value).matches();
+    }
+
+    public static boolean isValidAddress(String value) {
+        if (!isValidHexPrefix(value)) {
             return false;
         }
 
-        String value1 = (String) value;
-        if (value1.length() < 2) {
-            return false;
-        }
-
-        return PATTERN_ADDRESS.matcher(value1).matches();
+        return PATTERN_ADDRESS.matcher(value).matches();
     }
 
     public static boolean isValidHex(String value) {
-        if (value == null) {
-            return false;
-        }
-
-        if (value.length() < 3) {
-            return false;
-        }
-
-        if (!value.startsWith(Web3Constant.HEX_PREFIX)) {
+        if (!isValidHexPrefix(value)) {
             return false;
         }
 
         return PATTERN.matcher(value).matches();
     }
 
+    public static boolean isValidHexPrefix(String value) {
+        if (value == null) {
+            return false;
+        }
+
+        if (value.length() < 2) {
+            return false;
+        }
+
+        return value.startsWith(Web3Constant.HEX_PREFIX);
+    }
+
     public static boolean isEmpty(String field) {
-        return StringUtils.isEmpty(field) || Web3Constant.HEX_PREFIX.equals(field);
+        return !isValidHexPrefix(field) || Web3Constant.HEX_PREFIX.equals(field);
     }
 }
+

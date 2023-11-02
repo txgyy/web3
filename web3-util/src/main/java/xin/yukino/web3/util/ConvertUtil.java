@@ -15,12 +15,12 @@ public class ConvertUtil {
         return Convert.fromWei(new BigDecimal(n), Convert.Unit.ETHER);
     }
 
-    public static BigDecimal fromGWei(BigDecimal n) {
-        return Convert.toWei(n, Convert.Unit.GWEI);
+    public static BigInteger fromGWei(BigDecimal n) {
+        return Convert.toWei(n, Convert.Unit.GWEI).toBigInteger();
     }
 
-    public static BigDecimal fromEther(BigDecimal n) {
-        return Convert.toWei(n, Convert.Unit.ETHER);
+    public static BigInteger fromEther(BigDecimal n) {
+        return Convert.toWei(n, Convert.Unit.ETHER).toBigInteger();
     }
 
 }
