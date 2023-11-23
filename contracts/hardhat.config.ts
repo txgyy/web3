@@ -53,7 +53,8 @@ const config: HardhatUserConfig = {
     arb_main: getNetwork('https://arb1.arbitrum.io/rpc'),
     op_test: getNetwork('https://optimism-goerli.public.blastapi.io'),
     op_main: getNetwork('https://mainnet.optimism.io'),
-    avax_main: getNetwork('https://avalanche.blockpi.network/v1/rpc/public')
+    avax_main: getNetwork('https://avalanche.blockpi.network/v1/rpc/public'),
+    matic_main: getNetwork('https://polygon-rpc.com')
   },
   mocha: {
     timeout: 10000

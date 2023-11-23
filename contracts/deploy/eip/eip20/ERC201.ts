@@ -16,4 +16,4 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 }
 
 export default deploy
-deploy.tags = ['erc201']
+deploy.tags = ['ERC201']

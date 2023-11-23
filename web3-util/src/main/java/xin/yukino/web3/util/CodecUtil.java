@@ -76,6 +76,11 @@ public class CodecUtil {
         return func.decodeCall(Numeric.hexStringToByteArray(input));
     }
 
+    public static Tuple decodeStruct(String input, String struct) {
+        Function func = Function.parse("()", struct.replace(" ", ""));
+        return func.decodeReturn(Numeric.hexStringToByteArray(input));
+    }
+
 
     public static String cleanHexPrefix(String input) {
         return Numeric.cleanHexPrefix(input);
