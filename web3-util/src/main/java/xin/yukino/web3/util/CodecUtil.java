@@ -21,6 +21,7 @@ import org.web3j.protocol.core.methods.response.Transaction;
 import org.web3j.rlp.RlpDecoder;
 import org.web3j.rlp.RlpList;
 import org.web3j.utils.Numeric;
+import org.web3j.utils.Strings;
 import xin.yukino.web3.util.constant.Web3Constant;
 
 import java.math.BigInteger;
@@ -143,4 +144,11 @@ public class CodecUtil {
         return Address.toChecksumAddress(address);
     }
 
+    public static String getAddressMapSlot(String addr, BigInteger index) {
+        return getAddressMapSlot(addr, Numeric.toHexStringNoPrefixZeroPadded(index, 64));
+    }
+
+    public static String getAddressMapSlot(String addr, String index) {
+        return Numeric.toHexString(CodecUtil.keccak256(Strings.zeros(24) + Numeric.cleanHexPrefix(addr) + Numeric.cleanHexPrefix(index)));
+    }
 }
