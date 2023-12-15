@@ -151,4 +151,22 @@ public class CodecUtil {
     public static String getAddressMapSlot(String addr, String index) {
         return Numeric.toHexString(CodecUtil.keccak256(Strings.zeros(24) + Numeric.cleanHexPrefix(addr) + Numeric.cleanHexPrefix(index)));
     }
+
+    public static String encodeCallData(String methodSig, Object... args) {
+        Function func = Function.parse(methodSig);
+        for (int i = 0; i < args.length; i++) {
+            Object arg = args[i];
+            if (!(arg instanceof String)) {
+                continue;
+            }
+            String arg1 = (String) arg;
+            if (arg1.length() != Web3Constant.ADDRESS_LENGTH_WITH_PREFIX) {
+                continue;
+            }
+
+            arg1 = Address.toChecksumAddress(arg1);
+            args[i] = Address.wrap(arg1);
+        }
+        return Numeric.toHexString(func.encodeCallWithArgs(args).array());
+    }
 }

@@ -5,7 +5,6 @@ import 'hardhat-deploy'
 import '@nomiclabs/hardhat-etherscan'
 import 'solidity-coverage'
 import 'dotenv/config'
-import 'hardhat-tracer'
 
 const privateKey: string = process.env.PRIVATE_KEY!
 
@@ -16,12 +15,12 @@ function getNetwork (url: string): { url: string, accounts: [string] } {
   }
 }
 
-const optimizedCompilerSettings_0_8_12 = {
-  version: '0.8.12',
+const optimizedCompilerSettings_0_8_17 = {
+  version: '0.8.17',
   settings: {
     optimizer: {
       enabled: true,
-      runs: 1000000
+      runs: 200
     }
     // viaIR: true
   }
@@ -33,16 +32,16 @@ const optimizedCompilerSettings_0_8_12 = {
 const config: HardhatUserConfig = {
   solidity: {
     compilers: [{
-      version: '0.8.17',
+      version: '0.8.15',
       settings: {
         optimizer: {
           enabled: false,
-          runs: 0
+          runs: 200
         }
       }
     }],
     overrides: {
-      'contracts/eip/eip4337/*': optimizedCompilerSettings_0_8_12
+      'contracts/eip/eip4337/*': optimizedCompilerSettings_0_8_17
     }
   },
   networks: {
@@ -52,7 +51,7 @@ const config: HardhatUserConfig = {
     arb_test: getNetwork('https://goerli-rollup.arbitrum.io/rpc'),
     arb_main: getNetwork('https://arb1.arbitrum.io/rpc'),
     op_test: getNetwork('https://optimism-goerli.public.blastapi.io'),
-    op_main: getNetwork('https://mainnet.optimism.io'),
+    op_main: getNetwork('https://fullnode.okg.com/api/poly/fork/analysis/rpc'),
     avax_main: getNetwork('https://avalanche.blockpi.network/v1/rpc/public'),
     matic_main: getNetwork('https://polygon-rpc.com')
   },

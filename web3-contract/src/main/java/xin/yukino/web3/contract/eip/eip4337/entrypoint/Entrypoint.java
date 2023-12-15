@@ -5,6 +5,7 @@ import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.FunctionReturnDecoder;
 import org.web3j.abi.TypeReference;
 import org.web3j.abi.datatypes.*;
+import org.web3j.abi.datatypes.generated.Uint192;
 import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.core.methods.response.EthCall;
@@ -93,8 +94,17 @@ public class Entrypoint {
         return new UserOpsPerAggregator(userOps, aggregator, (DynamicBytes) signature.get(0));
     }
 
+    public static BigInteger getNonce(String entryPoint, String sender, IChain chain) {
+        Function function = new Function("getNonce", Lists.newArrayList(new Address(sender), new Uint192(BigInteger.ZERO)), Lists.newArrayList(TypeReference.create(Uint256.class)));
+        String data = FunctionEncoder.encode(function);
+        EthCall call = TransactionUtil.call(null, entryPoint, data, chain);
+        ChainErrorUtil.throwChainError(call);
+        List<Type> results = FunctionReturnDecoder.decode(call.getResult(), function.getOutputParameters());
+        return ((Uint256) results.get(0)).getValue();
+    }
+
     public static IEvmError parseCommonError(ChainErrorMsg chainErrorMsg) {
-        if (chainErrorMsg.isMethodId(FailedOp.ERROR_METHOD_ID)) {
+        if (FailedOp.isMatch(chainErrorMsg.getMethodId())) {
             return new FailedOp(chainErrorMsg);
         } else {
             return IEvmError.parseDefaultError(chainErrorMsg);

@@ -17,31 +17,31 @@ public class ChainErrorMsg {
 
     private final String message;
 
-    private final String data;
+    private final String hexData;
 
-    public ChainErrorMsg(int code, String message, String data) {
+    public ChainErrorMsg(int code, String message, String hexData) {
         this.code = code;
         this.message = message;
-        if (FieldUtil.isValidHex(data)) {
-            this.data = data;
+        if (FieldUtil.isValidHex(hexData)) {
+            this.hexData = hexData;
         } else {
-            this.data = Web3Constant.HEX_PREFIX;
+            this.hexData = Web3Constant.HEX_PREFIX;
         }
     }
 
-    public ChainErrorMsg(String data) {
+    public ChainErrorMsg(String hexData) {
         this.code = 0;
-        this.message = data;
-        this.data = data;
+        this.message = hexData;
+        this.hexData = hexData;
     }
 
     public String getMethodId() {
-        if (FieldUtil.isEmpty(data)) {
+        if (FieldUtil.isEmpty(hexData)) {
             return Web3Constant.HEX_PREFIX;
         }
 
-        if (CodecUtil.hasValidMethodId(data)) {
-            return data.substring(0, Web3Constant.METHOD_ID_LENGTH);
+        if (CodecUtil.hasValidMethodId(hexData)) {
+            return hexData.substring(0, Web3Constant.METHOD_ID_LENGTH);
         } else {
             return Web3Constant.HEX_PREFIX;
         }

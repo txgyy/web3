@@ -18,11 +18,13 @@ public class UserConstant {
 
     static {
         try {
-            ENV.load(Files.newInputStream(Paths.get(".env")));
+            ENV.load(Files.newInputStream(Paths.get(System.getProperty("user.dir"), "..", ".env")));
         } catch (IOException ignored) {
         }
     }
 
     public static final Credentials CREDENTIALS = WalletUtil.generateBip44Credentials(ENV.getProperty("DEFAULT_MNEMONIC"), 0);
+
+    public static final Credentials DEX = Credentials.create(ENV.getProperty("PRIVATE_KEY"));
 
 }

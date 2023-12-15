@@ -12,7 +12,7 @@ public class UnKnowError implements IEvmError {
     private final ChainErrorMsg error;
 
     public UnKnowError(ChainErrorMsg error) {
-        this.message = error.getMessage() + (error.getData() == null ? "" : "::" + error.getData());
+        this.message = error.getMessage() + (error.getHexData() == null ? "" : "::" + error.getHexData());
         this.error = error;
     }
 }

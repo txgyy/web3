@@ -8,6 +8,8 @@ public interface Web3Constant {
 
     int ADDRESS_BYTE_LENGTH = 20;
 
+    int ADDRESS_LENGTH_WITH_PREFIX = 42;
+
     int METHOD_ID_LENGTH = 10;
 
     int BYTE_LENGTH = 32;

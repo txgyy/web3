@@ -21,11 +21,11 @@ public class Chain implements IChain {
 
     public static Chain MATIC_TEST = new Chain(80001, true, "https://rpc.ankr.com/polygon_mumbai");
 
-    public static Chain MATIC_MAIN = new Chain(137, true, "https://polygon-rpc.com");
+    public static Chain MATIC_MAIN = new Chain(137, true, "https://fullnode.okg.com/api/poly/fork/analysis/rpc");
 
     public static Chain BSC_TEST = new Chain(97, false, "https://data-seed-prebsc-1-s2.binance.org:8545");
 
-    public static Chain BSC_MAIN = new Chain(56, false, "https://bsc-dataseed1.binance.org");
+    public static Chain BSC_MAIN = new Chain(56, false, "https://fullnode.okg.com/api/bsc/native/all/debugrpc");
 
     public static Chain ARB_TEST = new Chain(421613, true, "https://goerli-rollup.arbitrum.io/rpc");
 
@@ -33,7 +33,7 @@ public class Chain implements IChain {
 
     public static Chain AVAX_TEST = new Chain(43113, true, "https://api.avax-test.network/ext/bc/C/rpc");
 
-    public static Chain AVAX_MAIN = new Chain(43114, true, "https://api.avax.network/ext/bc/C/rpc");
+    public static Chain AVAX_MAIN = new Chain(43114, true, "https://fullnode.okg.com/api/avaxc/fork/analysis/rpc/ext/C/rpc");
 
     public static Chain OP_TEST = new Chain(420, true, "https://goerli.optimism.io");
 

@@ -30,7 +30,14 @@ public class Account {
     }
 
     public static String getOwner(String address, IChain chain) {
-        Function function = new Function("getOwner", Lists.newArrayList(), Lists.newArrayList(TypeReference.create(Address.class)));
+        Function function = new Function("owner", Lists.newArrayList(), Lists.newArrayList(TypeReference.create(Address.class)));
+        String data = FunctionEncoder.encode(function);
+        EthCall call = TransactionUtil.call(null, address, data, chain);
+        return (String) FunctionReturnDecoder.decode(call.getResult(), function.getOutputParameters()).get(0).getValue();
+    }
+
+    public static String entryPoint(String address, IChain chain) {
+        Function function = new Function("entryPoint", Lists.newArrayList(), Lists.newArrayList(TypeReference.create(Address.class)));
         String data = FunctionEncoder.encode(function);
         EthCall call = TransactionUtil.call(null, address, data, chain);
         return (String) FunctionReturnDecoder.decode(call.getResult(), function.getOutputParameters()).get(0).getValue();

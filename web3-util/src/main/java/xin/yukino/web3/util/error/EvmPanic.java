@@ -37,7 +37,7 @@ public class EvmPanic implements IEvmError {
     private final ChainErrorMsg error;
 
     public EvmPanic(ChainErrorMsg chainErrorMsg) {
-        List<Type> types = CodecUtil.decodeError(chainErrorMsg.getData(), ERROR);
+        List<Type> types = CodecUtil.decodeError(chainErrorMsg.getHexData(), ERROR);
         this.message = Numeric.encodeQuantity(((Uint256) types.get(0)).getValue());
         error = chainErrorMsg;
     }

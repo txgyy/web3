@@ -2,13 +2,8 @@ package xin.yukino.web3.contract.config;
 
 import lombok.Getter;
 import org.web3j.protocol.http.HttpService;
-import sun.net.SocksProxy;
 import xin.yukino.web3.util.IChain;
 import xin.yukino.web3.util.web3j.Web3jDebug;
-
-import java.net.InetSocketAddress;
-
-import static org.web3j.protocol.http.HttpService.getOkHttpClientBuilder;
 
 /**
  * @author yukino.xin
@@ -20,7 +15,7 @@ public class Chain implements IChain {
 
     public static Chain OKC_TEST = new Chain(65, false, "https://exchaintestrpc.okex.org");
 
-    public static Chain OKC_MAIN = new Chain(66, false, "https://exchainrpc.okex.org");
+    public static Chain OKC_MAIN = new Chain(66, false, "https://fullnode.okg.com/okchain/fork/aawallet/rpc");
 
     public static Chain OKB_TEST = new Chain(195, false, "https://okbtestrpc.okbchain.org");
 
@@ -61,7 +56,7 @@ public class Chain implements IChain {
         this.chainId = chainId;
         this.eip1559 = eip1559;
 
-        HttpService web3jService = new HttpService(rpc, getOkHttpClientBuilder().proxy(SocksProxy.create(InetSocketAddress.createUnresolved("127.0.0.1", 10010), 5)).build(), true);
+        HttpService web3jService = new HttpService(rpc, true);
         this.web3j = Web3jDebug.build(web3jService);
     }
 }

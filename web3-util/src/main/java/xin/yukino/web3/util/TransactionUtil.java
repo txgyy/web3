@@ -58,7 +58,7 @@ public class TransactionUtil {
                                              boolean isAccelerated, BigInteger... prices) {
         String fromAddr = from.getAddress();
         if (gasLimit == null) {
-            gasLimit = estimateGas(fromAddr, to, data, chain).multiply(BigInteger.valueOf(13)).divide(BigInteger.TEN);
+            gasLimit = estimateGas(fromAddr, to, data, chain).multiply(BigInteger.valueOf(20)).divide(BigInteger.TEN);
         }
         BigInteger nonce = AccountUtil.getNonce(fromAddr, isAccelerated, chain);
         prices = resolveGasPrice(chain, prices);

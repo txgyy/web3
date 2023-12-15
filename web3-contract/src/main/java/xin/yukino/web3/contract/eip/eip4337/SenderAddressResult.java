@@ -25,7 +25,7 @@ public class SenderAddressResult implements IEvmError {
 
 
     public SenderAddressResult(ChainErrorMsg chainErrorMsg) {
-        List<Type> types = CodecUtil.decodeError(chainErrorMsg.getData(), ERROR);
+        List<Type> types = CodecUtil.decodeError(chainErrorMsg.getHexData(), ERROR);
         this.address = (Address) types.get(0);
         error = chainErrorMsg;
     }

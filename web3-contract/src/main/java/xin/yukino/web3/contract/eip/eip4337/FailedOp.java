@@ -4,13 +4,12 @@ import com.google.common.collect.Lists;
 import lombok.Getter;
 import org.web3j.abi.EventEncoder;
 import org.web3j.abi.TypeReference;
-import org.web3j.abi.datatypes.Address;
-import org.web3j.abi.datatypes.Event;
-import org.web3j.abi.datatypes.Type;
-import org.web3j.abi.datatypes.Utf8String;
+import org.web3j.abi.datatypes.*;
 import org.web3j.abi.datatypes.generated.Uint256;
+import org.web3j.utils.Numeric;
 import xin.yukino.web3.util.CodecUtil;
 import xin.yukino.web3.util.error.ChainErrorMsg;
+import xin.yukino.web3.util.error.EvmError;
 import xin.yukino.web3.util.error.IEvmError;
 
 import java.util.List;
@@ -18,25 +17,51 @@ import java.util.List;
 @Getter
 public class FailedOp implements IEvmError {
 
-    public static final Event ERROR = new Event("FailedOp", Lists.newArrayList(TypeReference.create(Uint256.class), TypeReference.create(Address.class), TypeReference.create(Utf8String.class)));
+    public static final Event ERROR_V6 = new Event("FailedOp", Lists.newArrayList(TypeReference.create(Uint256.class), TypeReference.create(Utf8String.class)));
 
-    public static final String ERROR_METHOD_ID = EventEncoder.encode(ERROR).substring(0, 10);
+    public static final Event ERROR_BYTES_V6 = new Event("FailedOp", Lists.newArrayList(TypeReference.create(Uint256.class), TypeReference.create(DynamicBytes.class)));
 
-    private final Uint256 opIndex;
+    // 0x220266b6
+    public static final String ERROR_METHOD_ID_V6 = EventEncoder.encode(ERROR_V6).substring(0, 10);
 
-    private final Address paymaster;
+    public static final Event ERROR_OKX = new Event("FailedOp", Lists.newArrayList(TypeReference.create(Uint256.class), TypeReference.create(Address.class), TypeReference.create(Utf8String.class)));
 
-    private final Utf8String reason;
+    public static final Event ERROR_BYTES_OKX = new Event("FailedOp", Lists.newArrayList(TypeReference.create(Uint256.class), TypeReference.create(Address.class), TypeReference.create(DynamicBytes.class)));
+
+    // 0x00fa072b
+    public static final String ERROR_METHOD_ID_OKX = EventEncoder.encode(ERROR_OKX).substring(0, 10);
+
+    private final int opIndex;
+
+    private final String reason;
 
     private final ChainErrorMsg error;
 
+    public FailedOp(ChainErrorMsg evmErrorMsg) {
+        List<Type> types;
+        byte[] bytes;
+        if (evmErrorMsg.isMethodId(ERROR_METHOD_ID_V6)) {
+            types = CodecUtil.decodeError(evmErrorMsg.getHexData(), ERROR_BYTES_V6);
+            bytes = ((DynamicBytes) types.get(1)).getValue();
+        } else {
+            types = CodecUtil.decodeError(evmErrorMsg.getHexData(), ERROR_BYTES_OKX);
+            bytes = ((DynamicBytes) types.get(2)).getValue();
+        }
 
-    public FailedOp(ChainErrorMsg chainErrorMsg) {
-        List<Type> types = CodecUtil.decodeError(chainErrorMsg.getData(), ERROR);
-        opIndex = (Uint256) types.get(0);
-        paymaster = (Address) types.get(1);
-        reason = (Utf8String) types.get(2);
-        error = chainErrorMsg;
+        opIndex = ((Uint256) types.get(0)).getValue().intValue();
+
+        String hexData = Numeric.toHexString(bytes);
+        reason = new EvmError(hexData).getReason();
+        error = evmErrorMsg;
+    }
+
+
+    public FailedOp(String hexData) {
+        this(new ChainErrorMsg(hexData));
+    }
+
+    public static boolean isMatch(String methodId) {
+        return methodId.equals(ERROR_METHOD_ID_V6) || methodId.equals(ERROR_METHOD_ID_OKX);
     }
 
 }
