@@ -101,7 +101,7 @@ class EntrypointTest extends Specification {
         def chain = Chain.MATIC_MAIN
         def credentials = UserConstant.CREDENTIALS
         def entrypoint = "0x5ff137d4b0fdcd49dca30c7cf57e578a026d2789"
-        def paymaster = "0xEFE9118a8A61b71B1a71e76aaf593ad755A2F3A1"
+        def paymaster = "0x3DC2A488f09765B17d9a02fD54307FA744e37b0f"
         when:
         def tx = Entrypoint.depositTo(entrypoint, paymaster, BigInteger.TEN.pow(18), credentials, chain)
         then:

@@ -10,13 +10,11 @@ import com.esaulpaugh.headlong.abi.Tuple;
 import lombok.SneakyThrows;
 import org.web3j.abi.FunctionReturnDecoder;
 import org.web3j.abi.TypeEncoder;
+import org.web3j.abi.datatypes.DynamicBytes;
 import org.web3j.abi.datatypes.DynamicStruct;
 import org.web3j.abi.datatypes.Event;
 import org.web3j.abi.datatypes.Type;
-import org.web3j.crypto.Hash;
-import org.web3j.crypto.RawTransaction;
-import org.web3j.crypto.Sign;
-import org.web3j.crypto.TransactionEncoder;
+import org.web3j.crypto.*;
 import org.web3j.protocol.core.methods.response.Transaction;
 import org.web3j.rlp.RlpDecoder;
 import org.web3j.rlp.RlpList;
@@ -57,7 +55,12 @@ public class CodecUtil {
     public static String abiEncodePacked(Type... parameters) {
         StringBuilder sb = new StringBuilder();
         for (Type parameter : parameters) {
-            sb.append(TypeEncoder.encodePacked(parameter));
+            if (parameter instanceof DynamicBytes) {
+                DynamicBytes parameter1 = (DynamicBytes) parameter;
+                sb.append(Numeric.toHexStringNoPrefix(parameter1.getValue()));
+            } else {
+                sb.append(TypeEncoder.encodePacked(parameter));
+            }
         }
         return sb.toString();
     }
@@ -168,5 +171,11 @@ public class CodecUtil {
             args[i] = Address.wrap(arg1);
         }
         return Numeric.toHexString(func.encodeCallWithArgs(args).array());
+    }
+
+    public static String generateTransactionHashHexEncoded(
+            RawTransaction rawTransaction, long chainId, Credentials credentials) {
+        byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, chainId, credentials);
+        return Numeric.toHexString(Hash.sha3(signedMessage));
     }
 }

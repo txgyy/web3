@@ -30,4 +30,15 @@ class TransactionUtilTest extends Specification {
         then:
         println transaction
     }
+
+    def "transfer"() {
+        given:
+        def from = UserConstant.CREDENTIALS
+        def to = from.address
+        when:
+        def transaction = TransactionUtil.transfer(Chain.AVAX_MAIN, from, to, BigDecimal.ZERO)
+        then:
+        println transaction.transactionHash
+
+    }
 }

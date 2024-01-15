@@ -1,11 +1,14 @@
 package xin.yukino.web3.util;
 
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.SneakyThrows;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.RawTransaction;
+import org.web3j.crypto.TransactionUtils;
+import org.web3j.crypto.transaction.type.TransactionType;
 import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.Request;
@@ -28,29 +31,29 @@ public class TransactionUtil {
     //region execute
     @SneakyThrows
     public static EthSendTransaction sendTransaction(IChain chain, Credentials from, BigInteger nonce, BigInteger gasLimit, String to, BigInteger value, String data, BigInteger... gasPrice) {
-        EthSendTransaction ethSendTransaction;
-        if (from.getEcKeyPair().getPrivateKey().equals(BigInteger.ZERO)) {
-            Transaction transaction;
-            if (chain.isEip1559()) {
-                transaction = new Transaction(from.getAddress(), nonce, null, gasLimit, to, value, data, chain.getChainId(), gasPrice[1], gasPrice[0]);
-            } else {
-                transaction = new Transaction(from.getAddress(), nonce, gasPrice[0], gasLimit, to, value, data, chain.getChainId(), null, null);
-            }
-            ethSendTransaction = chain.getWeb3j().ethSendTransaction(transaction).send();
+        RawTransaction rawTransaction;
+        RawTransactionManager transactionManager;
+        if (chain.getTxType() == TransactionType.LEGACY) {
+            rawTransaction = RawTransaction.createTransaction(nonce, gasPrice[0], gasLimit, to, value, data);
+            transactionManager = new RawTransactionManager(chain.getWeb3j(), from, chain.getChainId());
+        } else if (chain.getTxType() == TransactionType.EIP2930) {
+            rawTransaction = RawTransaction.createTransaction(chain.getChainId(), nonce, gasPrice[0], gasLimit, to, value, data, Lists.newArrayList());
+            transactionManager = new RawTransactionManager(chain.getWeb3j(), from);
         } else {
-            RawTransactionManager transactionManager;
-            RawTransaction rawTransaction;
-            if (chain.isEip1559()) {
-                transactionManager = new RawTransactionManager(chain.getWeb3j(), from, chain.getChainId());
-                rawTransaction = RawTransaction.createTransaction(chain.getChainId(), nonce, gasLimit, to, value, data, gasPrice[1], gasPrice[0]);
-
-            } else {
-                transactionManager = new RawTransactionManager(chain.getWeb3j(), from, chain.getChainId());
-                rawTransaction = RawTransaction.createTransaction(nonce, gasPrice[0], gasLimit, to, value, data);
-            }
-            ethSendTransaction = transactionManager.signAndSend(rawTransaction);
+            rawTransaction = RawTransaction.createTransaction(chain.getChainId(), nonce, gasLimit, to, value, data, gasPrice[1], gasPrice[0]);
+            transactionManager = new RawTransactionManager(chain.getWeb3j(), from);
         }
+
+        String txHash;
+        if (chain.getTxType() == TransactionType.LEGACY) {
+            txHash = CodecUtil.generateTransactionHashHexEncoded(rawTransaction, chain.getChainId(), from);
+        } else {
+            txHash = TransactionUtils.generateTransactionHashHexEncoded(rawTransaction, from);
+        }
+        EthSendTransaction ethSendTransaction = transactionManager.signAndSend(rawTransaction);
+
         ChainErrorUtil.throwChainError(ethSendTransaction);
+
         return ethSendTransaction;
     }
 
@@ -87,7 +90,7 @@ public class TransactionUtil {
         Transaction transaction;
         if (prices.length == 0) {
             transaction = Transaction.createFunctionCallTransaction(from, nonce, null, gasLimit, to, value, data);
-        } else if (chain.isEip1559()) {
+        } else if (chain.getTxType() == TransactionType.EIP1559) {
             transaction = new Transaction(from, nonce, null, gasLimit, to, value, data, chain.getChainId(), prices[1], prices[0]);
         } else {
             transaction = Transaction.createFunctionCallTransaction(from, nonce, prices[0], gasLimit, to, value, data);
@@ -167,7 +170,7 @@ public class TransactionUtil {
     }
 
     private static BigInteger[] resolveGasPrice(IChain chain, BigInteger... prices) {
-        if (chain.isEip1559()) {
+        if (chain.getTxType() == TransactionType.EIP1559) {
             if (prices.length < 2) {
                 ChainFee gasPrice1559 = get1559GasPrice(chain, Web3Constant.FEE_HISTORY_COMMON_REWARD_PERCENTILE);
                 BigInteger maxPriorityFeePerGas = gasPrice1559.getMaxPriorityFeePerGas();
