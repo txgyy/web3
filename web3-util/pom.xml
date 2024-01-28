@@ -73,21 +73,6 @@
             <version>4.4</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.sparrowwallet/hummingbird -->
-        <dependency>
-            <groupId>com.sparrowwallet</groupId>
-            <artifactId>hummingbird</artifactId>
-            <version>1.7.3</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.bitcoinj/bitcoinj-core -->
-        <dependency>
-            <groupId>org.bitcoinj</groupId>
-            <artifactId>bitcoinj-core</artifactId>
-            <version>0.16.2</version>
-        </dependency>
-
-
         <!-- https://mvnrepository.com/artifact/org.spockframework/spock-core -->
         <dependency>
             <groupId>org.spockframework</groupId>
