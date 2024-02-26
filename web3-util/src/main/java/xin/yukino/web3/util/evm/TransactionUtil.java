@@ -81,6 +81,10 @@ public class TransactionUtil {
         return execute(chain, from, to, Convert.toWei(value, Convert.Unit.ETHER).toBigIntegerExact(), "", false);
     }
 
+    public static EthSendTransaction transfer(IChain chain, Credentials from, String to, BigInteger value) {
+        return execute(chain, from, to, value, "", false);
+    }
+
     //endregion
 
     //region call

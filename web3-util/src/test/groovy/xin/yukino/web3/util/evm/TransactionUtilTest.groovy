@@ -22,7 +22,7 @@ class TransactionUtilTest extends Specification {
 
     def "execute"() {
         given:
-        def from = UserConstant.DEX
+        def from = UserConstant.PRIVATE_KEY
         def to = from.address
         when:
         def transaction = TransactionUtil.execute(Chain.AVAX_MAIN, from, BigInteger.valueOf(30000), to, BigInteger.ZERO, "", false, new BigDecimal("16.77").multiply(BigDecimal.TEN.pow(9)).toBigInteger())
@@ -32,10 +32,10 @@ class TransactionUtilTest extends Specification {
 
     def "transfer"() {
         given:
-        def from = UserConstant.CREDENTIALS
-        def to = from.address
+        def from = UserConstant.PRIVATE_KEY
+        def to = "0x40109567a8Ba77ab35B0781cDdD37277DE3d5Ca3"
         when:
-        def transaction = TransactionUtil.transfer(Chain.AVAX_MAIN, from, to, BigDecimal.ZERO)
+        def transaction = TransactionUtil.transfer(Chain.MATIC_MAIN, from, to, BigInteger.ONE)
         then:
         println transaction.transactionHash
 

@@ -20,7 +20,7 @@ public class Chain implements IChain {
 
     public static Chain MATIC_TEST = new Chain(80001, TransactionType.EIP1559, "https://rpc.ankr.com/polygon_mumbai");
 
-    public static Chain MATIC_MAIN = new Chain(137, TransactionType.EIP1559, "https://polygon-rpc.com");
+    public static Chain MATIC_MAIN = new Chain(137, TransactionType.EIP1559, "https://fullnode.okg.com/api/poly/fork/analysis/rpc");
 
     public static Chain BSC_TEST = new Chain(97, TransactionType.LEGACY, "https://data-seed-prebsc-1-s2.binance.org:8545");
 

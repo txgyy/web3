@@ -5,11 +5,13 @@ import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.FunctionReturnDecoder;
 import org.web3j.abi.TypeReference;
 import org.web3j.abi.datatypes.*;
+import org.web3j.abi.datatypes.generated.Bytes32;
 import org.web3j.abi.datatypes.generated.Uint192;
 import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.core.methods.response.EthCall;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
+import org.web3j.utils.Numeric;
 import xin.yukino.web3.app.evm.eip.eip4337.*;
 import xin.yukino.web3.util.evm.ChainErrorUtil;
 import xin.yukino.web3.util.evm.IChain;
@@ -22,9 +24,9 @@ import java.util.List;
 
 public class Entrypoint {
 
-    public EthSendTransaction handleOps(String entryPointAddress, DynamicArray<UserOperation> userOps, Credentials bounder, IChain chain) {
-        Function function = new Function("handleOps", Lists.newArrayList(userOps, new Address(bounder.getAddress())), Lists.newArrayList());
-        return TransactionUtil.execute(chain, bounder, entryPointAddress, FunctionEncoder.encode(function));
+    public static EthSendTransaction handleOps(String entryPointAddress, UserOperation userOp, Credentials bounder, IChain chain) {
+        Function function = new Function("handleOps", Lists.newArrayList(new DynamicArray<>(UserOperation.class, userOp), new Address(bounder.getAddress())), Lists.newArrayList());
+        return TransactionUtil.execute(chain, bounder, BigInteger.valueOf(1000000), entryPointAddress, BigInteger.ZERO, FunctionEncoder.encode(function), false, userOp.getMaxFeePerGas().getValue(), userOp.getMaxPriorityFeePerGas().getValue());
     }
 
     public EthSendTransaction handleAggregatedOps(String entryPointAddress, DynamicArray<UserOpsPerAggregator> opsPerAggregator, Credentials bundler, IChain chain) {
@@ -48,8 +50,8 @@ public class Entrypoint {
         }
     }
 
-    public IEvmError simulateHandleOp(String entryPointAddress, UserOperation uop, IChain chain) {
-        Function function = new Function("simulateHandleOp", Lists.newArrayList(uop), Lists.newArrayList());
+    public static IEvmError simulateHandleOp(String entryPointAddress, UserOperation uop, IChain chain) {
+        Function function = new Function("simulateHandleOp", Lists.newArrayList(uop, Address.DEFAULT, DynamicBytes.DEFAULT), Lists.newArrayList());
         String data = FunctionEncoder.encode(function);
         EthCall call = TransactionUtil.call(entryPointAddress, entryPointAddress, data, chain);
         ChainErrorMsg chainErrorMsg = ChainErrorUtil.parseChainError(call);
@@ -101,6 +103,15 @@ public class Entrypoint {
         ChainErrorUtil.throwChainError(call);
         List<Type> results = FunctionReturnDecoder.decode(call.getResult(), function.getOutputParameters());
         return ((Uint256) results.get(0)).getValue();
+    }
+
+    public static String getUserOpHash(String entryPoint, UserOperation uop, IChain chain) {
+        Function function = new Function("getUserOpHash", Lists.newArrayList(uop), Lists.newArrayList(TypeReference.create(Bytes32.class)));
+        String data = FunctionEncoder.encode(function);
+        EthCall call = TransactionUtil.call(null, entryPoint, data, chain);
+        ChainErrorUtil.throwChainError(call);
+        List<Type> results = FunctionReturnDecoder.decode(call.getResult(), function.getOutputParameters());
+        return Numeric.toHexString(((Bytes32) results.get(0)).getValue());
     }
 
     public static IEvmError parseCommonError(ChainErrorMsg chainErrorMsg) {

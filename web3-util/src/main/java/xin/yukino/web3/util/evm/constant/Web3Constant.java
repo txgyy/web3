@@ -14,5 +14,5 @@ public interface Web3Constant {
 
     int BYTE_LENGTH = 32;
 
-    double FEE_HISTORY_COMMON_REWARD_PERCENTILE = 50;
+    double FEE_HISTORY_COMMON_REWARD_PERCENTILE = 80;
 }

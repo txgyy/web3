@@ -15,8 +15,8 @@ import java.math.BigInteger;
 
 public class Account {
 
-    public static BigInteger nonce(String address, IChain chain) {
-        Function function = new Function("nonce", Lists.newArrayList(), Lists.newArrayList(TypeReference.create(Uint256.class)));
+    public static BigInteger getNonce(String address, IChain chain) {
+        Function function = new Function("getNonce", Lists.newArrayList(), Lists.newArrayList(TypeReference.create(Uint256.class)));
         String data = FunctionEncoder.encode(function);
         EthCall call = TransactionUtil.call(null, address, data, chain);
         return (BigInteger) FunctionReturnDecoder.decode(call.getResult(), function.getOutputParameters()).get(0).getValue();

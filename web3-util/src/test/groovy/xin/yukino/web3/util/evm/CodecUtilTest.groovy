@@ -1,5 +1,8 @@
 package xin.yukino.web3.util.evm
 
+
+import com.esaulpaugh.headlong.abi.Function
+import com.esaulpaugh.headlong.abi.Tuple
 import org.web3j.abi.datatypes.DynamicBytes
 import org.web3j.abi.datatypes.generated.Uint256
 import org.web3j.utils.Numeric
@@ -72,11 +75,12 @@ class CodecUtilTest extends Specification {
 
     def "encodeCallData"() {
         given:
-        def sig = "transfer(address,uint256)"
+        def sig = "a((uint256,uint256)[])"
         when:
-        def data = CodecUtil.encodeCallData(sig, "0x424bf2f66cc418dace706efae9dd0435a5ee651d", "0xfb4f3f12258976395b34304e2bfd76d15e0af44a", BigInteger.ONE);
+
+        def data = Function.parse(sig).encodeCallWithArgs(Tuple.of(BigInteger.ZERO, BigInteger.ZERO)).array()
         then:
-        println data
+        println Numeric.toHexString(data)
 
     }
 
@@ -102,7 +106,9 @@ class CodecUtilTest extends Specification {
 
 
     def "hexToStr"() {
+        given:
+        def s = "623a34356266393930662c32303436342c313033"
         expect:
-        println CodecUtil.hexToStr("5c35a3de6f45bf9c013b6b812b9aced2a9859eb157d09236cbed5674ec58b138")
+        println CodecUtil.hexToStr(s)
     }
 }

@@ -1,4 +1,4 @@
-package xin.yukino.web3.util.evm.constant;
+package xin.yukino.web3.app.evm.constant;
 
 import org.web3j.crypto.Credentials;
 import xin.yukino.web3.util.evm.WalletUtil;
